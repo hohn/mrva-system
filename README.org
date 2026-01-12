@@ -1,0 +1,11 @@
+MRVA System Blueprint
+
+This repository defines the MRVA system:
+- component composition
+- interfaces
+- procedures
+
+It contains no deployment state.
+
+mrva-system is the blueprint.
+mrva-deploy is the scratch paper.
