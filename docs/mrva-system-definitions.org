@@ -1,0 +1,328 @@
+#+LATEX_COMPILER: lualatex
+
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \usepackage{newunicodechar}
+
+#+LATEX_HEADER: \usepackage{newunicodechar}
+
+#+LATEX_HEADER: \newunicodechar{₁}{\ensuremath{_1}}
+#+LATEX_HEADER: \newunicodechar{₂}{\ensuremath{_2}}
+#+LATEX_HEADER: \newunicodechar{₃}{\ensuremath{_3}}
+#+LATEX_HEADER: \newunicodechar{₄}{\ensuremath{_4}}
+#+LATEX_HEADER: \newunicodechar{₅}{\ensuremath{_5}}
+#+LATEX_HEADER: \newunicodechar{₆}{\ensuremath{_6}}
+#+LATEX_HEADER: \newunicodechar{₇}{\ensuremath{_7}}
+#+LATEX_HEADER: \newunicodechar{₈}{\ensuremath{_8}}
+#+LATEX_HEADER: \newunicodechar{₉}{\ensuremath{_9}}
+#+LATEX_HEADER: \newunicodechar{₀}{\ensuremath{_0}}
+
+#+LATEX_HEADER: \newunicodechar{ₐ}{\ensuremath{_a}}
+#+LATEX_HEADER: \newunicodechar{ₑ}{\ensuremath{_e}}
+#+LATEX_HEADER: \newunicodechar{ₒ}{\ensuremath{_o}}
+#+LATEX_HEADER: \newunicodechar{ₓ}{\ensuremath{_x}}
+#+LATEX_HEADER: \newunicodechar{ₙ}{\ensuremath{_n}}
+#+LATEX_HEADER: \newunicodechar{ₖ}{\ensuremath{_k}}
+#+LATEX_HEADER: \newunicodechar{ₘ}{\ensuremath{_m}}
+#+LATEX_HEADER: \newunicodechar{≡}{\ensuremath{\equiv}}
+#+LATEX_HEADER: \newunicodechar{…}{\ensuremath{\ldots}}
+
+#+LATEX_HEADER: \newunicodechar{≈}{\ensuremath{\mathrel{\approx}}}
+#+LATEX_HEADER: \newunicodechar{↓}{\ensuremath{\mathrel{\downarrow}}}
+#+LATEX_HEADER: \newunicodechar{✅}{\textcolor{green!50!black}{\ensuremath{\checkmark}}}
+#+LATEX_HEADER: \newunicodechar{❌}{\textcolor{red!70!black}{\ensuremath{\times}}}
+#+LATEX_HEADER: \newunicodechar{∣}{\ensuremath{\mid}}
+#+LATEX_HEADER: \newunicodechar{∈}{\ensuremath{\in}}
+#+LATEX_HEADER: \newunicodechar{→}{\ensuremath{\to}}
+#+LATEX_HEADER: \newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+#+LATEX_HEADER: \newunicodechar{↦}{\ensuremath{\mapsto}}
+#+LATEX_HEADER: \newunicodechar{≥}{\ensuremath{\ge}}
+#+LATEX_HEADER: \newunicodechar{≤}{\ensuremath{\le}}
+#+LATEX_HEADER: \newunicodechar{≡}{\ensuremath{\equiv}}
+#+LATEX_HEADER: \newunicodechar{⊂}{\ensuremath{\subset}}
+#+LATEX_HEADER: \newunicodechar{⊃}{\ensuremath{\supset}}
+#+LATEX_HEADER: \newunicodechar{⊆}{\ensuremath{\subseteq}}
+#+LATEX_HEADER: \newunicodechar{⊇}{\ensuremath{\supseteq}}
+#+LATEX_HEADER: \newunicodechar{⟶}{\ensuremath{\longrightarrow}}
+#+LATEX_HEADER: \newunicodechar{⟵}{\ensuremath{\longleftarrow}}
+#+LATEX_HEADER: \newunicodechar{⋯}{\ensuremath{\cdots}}
+#+LATEX_HEADER: \newunicodechar{…}{\ensuremath{\ldots}}
+#+LATEX_HEADER: \newunicodechar{∪}{\ensuremath{\cup}}
+#+LATEX_HEADER: \newunicodechar{∩}{\ensuremath{\cap}}
+#+LATEX_HEADER: \newunicodechar{∧}{\ensuremath{\wedge}}
+#+LATEX_HEADER: \newunicodechar{∨}{\ensuremath{\vee}}
+#+LATEX_HEADER: \newunicodechar{¬}{\ensuremath{\neg}}
+#+LATEX_HEADER: \newunicodechar{∀}{\ensuremath{\forall}}
+#+LATEX_HEADER: \newunicodechar{∃}{\ensuremath{\exists}}
+#+LATEX_HEADER: \newunicodechar{⊢}{\ensuremath{\vdash}}
+#+LATEX_HEADER: \newunicodechar{⊨}{\ensuremath{\vDash}}
+#+LATEX_HEADER: \newunicodechar{⊥}{\ensuremath{\bot}}
+#+LATEX_HEADER: \newunicodechar{⊤}{\ensuremath{\top}}
+#+LATEX_HEADER: \newunicodechar{∅}{\ensuremath{\emptyset}}
+#+LATEX_HEADER: \newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+#+LATEX_HEADER: \newunicodechar{⇔}{\ensuremath{\Leftrightarrow}}
+
+#+LATEX_HEADER: \usepackage[
+#+LATEX_HEADER:   paper=letterpaper,
+#+LATEX_HEADER:   left=1in,
+#+LATEX_HEADER:   right=1in,
+#+LATEX_HEADER:   top=1in,
+#+LATEX_HEADER:   bottom=1in
+#+LATEX_HEADER: ]{geometry}
+
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \setmainfont{Avenir Next}[
+#+LATEX_HEADER:   UprightFont = *,
+#+LATEX_HEADER:   ItalicFont = * Italic,
+#+LATEX_HEADER:   BoldFont = * Demi Bold,
+#+LATEX_HEADER:   BoldItalicFont = * Demi Bold Italic
+#+LATEX_HEADER: ]
+
+# #+LATEX_HEADER: \usepackage{fontspec}
+# #+LATEX_HEADER: \setmainfont{CMU Bright}
+# #+LATEX_HEADER: \setsansfont{CMU Bright}
+# #+LATEX_HEADER: \setmonofont{CMU Typewriter Text}
+
+#+HTML_HEAD: <style>
+#+HTML_HEAD: body {
+#+HTML_HEAD:   font-family: "Avenir Next", "Avenir", "Average Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+#+HTML_HEAD:   font-weight: 400;
+#+HTML_HEAD:   line-height: 1.5;
+#+HTML_HEAD: }
+#+HTML_HEAD: code, pre, tt {
+#+HTML_HEAD:   font-family: "CMU Typewriter Text", "CMU Typewriter", "Courier New", monospace;
+#+HTML_HEAD:   font-size: 0.95em;
+#+HTML_HEAD:   background-color: #f8f8f8;
+#+HTML_HEAD:   border-radius: 4px;
+#+HTML_HEAD:   padding: 0.1em 0.25em;
+#+HTML_HEAD: }
+#+HTML_HEAD: pre {
+#+HTML_HEAD:   padding: 0.6em;
+#+HTML_HEAD:   border: 1px solid #ddd;
+#+HTML_HEAD:   background-color: #fdfdfd;
+#+HTML_HEAD:   overflow-x: auto;
+#+HTML_HEAD: }
+#+HTML_HEAD: </style>
+
+# #+OPTIONS: author:nil date:nil html-validation-link:nil
+# #+OPTIONS: creator:nil
+# #+OPTIONS: html-postamble:nil
+
+* MRVA documentation: system definitions
+  This document defines the MRVA components, non-components, and their relation
+  to development, deployment, and documentation.
+
+  In summary:
+
+  1. MRVA core applies existing CodeQL queries to existing CodeQL databases
+     using the CodeQL command-line tools, and produces SARIF results.
+     It performs no query authoring, result interpretation, or presentation.
+
+  2. The only valid interface to the MRVA core consists of exactly three
+     requests, issued via =gh-mrva=:
+     - submit
+     - status
+     - get-results
+
+     No other execution interfaces are supported.
+
+  3. User interfaces are explicitly outside the core and exist solely for
+     convenience.
+     For demonstration of the core interface (developers) and its operation
+     (users), simple Tk-based UIs are provided.
+     These interfaces are non-authoritative and replaceable.
+
+  4. CodeQL database provisioning is required by the MRVA core but is not part
+     of the core itself.
+     The MRVA core depends on the existence of a database provider role, not on
+     any specific implementation.
+
+     The database provider interface consists of a single operation:
+     =list-dbs=.
+
+     A reference implementation of this interface is provided by the =hepc=
+     service.
+     This implementation targets open-source CodeQL databases and exists to:
+     - demonstrate the provider interface
+     - enable development and testing
+     - provide a complete, runnable system
+
+     The =hepc= service requires substantial engineering effort but remains
+     strictly outside the MRVA core.
+
+     In deployed environments, the reference implementation is expected to be
+     replaced by site-specific database providers (for example, internal or
+     proprietary repositories) without changes to the MRVA core.
+
+** MRVA Core definition
+   MRVA core is the minimal, sufficient system that turns
+   : (CodeQL databases × queries) → SARIF results
+   Nothing else.
+
+   - The core
+     - Accepts references to
+       - existing CodeQL databases
+       - existing CodeQL queries (packs or individual queries)
+     - Executes CodeQL deterministically
+     - Produces SARIF output
+     - Exposes execution state and results
+
+   - The core does not:
+     - edit queries
+     - render results
+     - interpret findings
+     - provide rich UIs
+     - manage source code checkouts
+     - manage DB construction
+
+   - MRVA core is an execution engine, not an IDE, not an analyst tool.
+** MRVA Core Interface, Authoritative API
+   - Interface Name: =gh-mrva=. This is the only supported interface to the core.
+
+   - Interface Style
+     - Shell-driven
+     - Scriptable
+     - Stateless per invocation
+
+   - Outside the core, this interface may be used:
+     - directly via the shell
+     - by user interfaces
+     - by automated systems (including AI agents)
+
+   - Command contract:
+     Exactly three requests are supported.
+     - submit
+       + Inputs:
+         - DB identifiers
+         - Query identifiers
+         - Optional execution parameters
+       + Output:
+         - opaque job ID
+
+     - status
+       + Input:
+         - job ID
+       + Output:
+         - state ∈ {queued, running, finished, failed}
+         - minimal progress metadata
+
+     - get-results
+       + Input:
+         - job ID
+       + Output:
+         + SARIF results
+         + CodeQL databases (optional, if explicitly requested)
+
+** MRVA Convenience UI for gh-mrva (Optional, Replaceable)
+   - Purpose:  Reduce friction for humans. 
+
+   - Implementations
+     - Basic UI (Python / Tk)
+       + thin wrapper over gh-mrva
+       + submit jobs
+       + poll status
+       + fetch SARIF
+       + minimal result listing
+
+       + Properties:
+         - disposable
+         - non-authoritative
+         - allowed to be ugly
+
+     - Fancy UI (VS Code extension)
+       + strictly a gh-mrva client
+       + no embedded execution logic
+       + no hidden or private APIs
+
+   - Key rule:
+     If a VS Code extension requires more privileges or APIs than shell access
+     to gh-mrva, the design is incorrect.
+
+** MRVA Core Result Handler (Post-Processing Layer)
+   - Purpose:
+     Transform raw SARIF into a structured, queryable dataset.
+
+   - Responsibilities:
+     + ingest SARIF
+     + normalize fields
+     + load data into DuckDB
+     + preserve references to:
+       - repository
+       - database
+       - query
+       - execution metadata
+
+   - Output:
+     A read-only analytical store.
+
+   - Dependency rules:
+     - MRVA core does not depend on DuckDB
+     - DuckDB ingestion depends on MRVA output
+
+** Non-core: Query Editing 
+   - Scope: Query editing is not MRVA.
+
+   - Location
+     + VS Code
+     + Plain filesystem
+     + Existing CodeQL tooling
+
+   - Relationship to MRVA:
+     + MRVA:
+       - consumes queries
+       - does not assist with authoring
+       - does not validate intent
+
+   - This separation avoids:
+     + IDE entanglement
+     + schema drift
+     + toolchain coupling
+
+** Development
+   - Definition: Development is everything that exists to change MRVA.
+
+   - Scope Includes
+     + source code
+     + build scripts
+     + test scaffolding
+     + experimental tools
+     + refactors
+     + prototype UIs
+     + temporary glue
+
+   - Properties
+     + Mutable
+     + Incomplete
+     + Allowed to be ugly
+     + Allowed to be slow
+     + Allowed to break
+
+   - Key Rule: Nothing in development is relied upon at runtime unless explicitly
+     promoted to deployment.
+    
+** Deployment
+   - Definition: Deployment is the sealed, operated system.
+     This is what users run.
+
+   - Scope includes:
+     + MRVA core binaries or containers
+     + gh-mrva
+     + fixed execution environments (Linux)
+     + deterministic configuration
+
+   - Properties:
+     + immutable (by policy)
+     + reproducible
+     + predictable
+     + auditable
+
+   - Key rule:
+     Deployment artifacts must be buildable from development using a fixed,
+     documented procedure.
+
+** Documentation
+   Documentation is split along the following axes:
+   - system: definitions, structure
+   - development: setup, use
+   - deployment: setup, use

@@ -1,0 +1,405 @@
+% Created 2026-01-13 Tue 22:33
+% Intended LaTeX compiler: lualatex
+\documentclass[11pt]{article}
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{newunicodechar}
+\usepackage{newunicodechar}
+\newunicodechar{₁}{\ensuremath{_1}}
+\newunicodechar{₂}{\ensuremath{_2}}
+\newunicodechar{₃}{\ensuremath{_3}}
+\newunicodechar{₄}{\ensuremath{_4}}
+\newunicodechar{₅}{\ensuremath{_5}}
+\newunicodechar{₆}{\ensuremath{_6}}
+\newunicodechar{₇}{\ensuremath{_7}}
+\newunicodechar{₈}{\ensuremath{_8}}
+\newunicodechar{₉}{\ensuremath{_9}}
+\newunicodechar{₀}{\ensuremath{_0}}
+\newunicodechar{ₐ}{\ensuremath{_a}}
+\newunicodechar{ₑ}{\ensuremath{_e}}
+\newunicodechar{ₒ}{\ensuremath{_o}}
+\newunicodechar{ₓ}{\ensuremath{_x}}
+\newunicodechar{ₙ}{\ensuremath{_n}}
+\newunicodechar{ₖ}{\ensuremath{_k}}
+\newunicodechar{ₘ}{\ensuremath{_m}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{…}{\ensuremath{\ldots}}
+\newunicodechar{≈}{\ensuremath{\mathrel{\approx}}}
+\newunicodechar{↓}{\ensuremath{\mathrel{\downarrow}}}
+\newunicodechar{✅}{\textcolor{green!50!black}{\ensuremath{\checkmark}}}
+\newunicodechar{❌}{\textcolor{red!70!black}{\ensuremath{\times}}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{⊂}{\ensuremath{\subset}}
+\newunicodechar{⊃}{\ensuremath{\supset}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{⊇}{\ensuremath{\supseteq}}
+\newunicodechar{⟶}{\ensuremath{\longrightarrow}}
+\newunicodechar{⟵}{\ensuremath{\longleftarrow}}
+\newunicodechar{⋯}{\ensuremath{\cdots}}
+\newunicodechar{…}{\ensuremath{\ldots}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+\newunicodechar{⊨}{\ensuremath{\vDash}}
+\newunicodechar{⊥}{\ensuremath{\bot}}
+\newunicodechar{⊤}{\ensuremath{\top}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{⇔}{\ensuremath{\Leftrightarrow}}
+\usepackage[
+paper=letterpaper,
+left=1in,
+right=1in,
+top=1in,
+bottom=1in
+]{geometry}
+\usepackage{fontspec}
+\setmainfont{Avenir Next}[
+UprightFont = *,
+ItalicFont = * Italic,
+BoldFont = * Demi Bold,
+BoldItalicFont = * Demi Bold Italic
+]
+\author{Michael Hohn}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={Michael Hohn},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 30.2 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+
+\section{MRVA documentation: system definitions}
+\label{sec:org8d205f4}
+This document defines the MRVA components, non-components, and their relation
+to development, deployment, and documentation.
+
+In summary:
+
+\begin{enumerate}
+\item MRVA core applies existing CodeQL queries to existing CodeQL databases
+using the CodeQL command-line tools, and produces SARIF results.
+It performs no query authoring, result interpretation, or presentation.
+
+\item The only valid interface to the MRVA core consists of exactly three
+requests, issued via \texttt{gh-mrva}:
+\begin{itemize}
+\item submit
+\item status
+\item get-results
+\end{itemize}
+
+No other execution interfaces are supported.
+
+\item User interfaces are explicitly outside the core and exist solely for
+convenience.
+For demonstration of the core interface (developers) and its operation
+(users), simple Tk-based UIs are provided.
+These interfaces are non-authoritative and replaceable.
+
+\item CodeQL database provisioning is required by the MRVA core but is not part
+of the core itself.
+The MRVA core depends on the existence of a database provider role, not on
+any specific implementation.
+
+The database provider interface consists of a single operation:
+\texttt{list-dbs}.
+
+A reference implementation of this interface is provided by the \texttt{hepc}
+service.
+This implementation targets open-source CodeQL databases and exists to:
+\begin{itemize}
+\item demonstrate the provider interface
+\item enable development and testing
+\item provide a complete, runnable system
+\end{itemize}
+
+The \texttt{hepc} service requires substantial engineering effort but remains
+strictly outside the MRVA core.
+
+In deployed environments, the reference implementation is expected to be
+replaced by site-specific database providers (for example, internal or
+proprietary repositories) without changes to the MRVA core.
+\end{enumerate}
+\subsection{MRVA Core definition}
+\label{sec:org67b83e3}
+MRVA core is the minimal, sufficient system that turns
+\begin{verbatim}
+(CodeQL databases × queries) → SARIF results
+\end{verbatim}
+
+Nothing else.
+
+\begin{itemize}
+\item The core
+\begin{itemize}
+\item Accepts references to
+\begin{itemize}
+\item existing CodeQL databases
+\item existing CodeQL queries (packs or individual queries)
+\end{itemize}
+\item Executes CodeQL deterministically
+\item Produces SARIF output
+\item Exposes execution state and results
+\end{itemize}
+
+\item The core does not:
+\begin{itemize}
+\item edit queries
+\item render results
+\item interpret findings
+\item provide rich UIs
+\item manage source code checkouts
+\item manage DB construction
+\end{itemize}
+
+\item MRVA core is an execution engine, not an IDE, not an analyst tool.
+\end{itemize}
+\subsection{MRVA Core Interface, Authoritative API}
+\label{sec:orgb53e0dc}
+\begin{itemize}
+\item Interface Name: \texttt{gh-mrva}
+This is the only supported interface to the core.
+
+\item Interface Style
+\begin{itemize}
+\item Shell-driven
+\item Scriptable
+\item Stateless per invocation
+\end{itemize}
+
+\item Outside the core, this interface may be used:
+\begin{itemize}
+\item directly via the shell
+\item by user interfaces
+\item by automated systems (including AI agents)
+\end{itemize}
+
+\item Command contract:
+Exactly three requests are supported.
+\begin{itemize}
+\item submit
+\begin{itemize}
+\item Inputs:
+\begin{itemize}
+\item DB identifiers
+\item Query identifiers
+\item Optional execution parameters
+\end{itemize}
+\item Output:
+\begin{itemize}
+\item opaque job ID
+\end{itemize}
+\end{itemize}
+
+\item status
+\begin{itemize}
+\item Input:
+\begin{itemize}
+\item job ID
+\end{itemize}
+\item Output:
+\begin{itemize}
+\item state ∈ \{queued, running, finished, failed\}
+\item minimal progress metadata
+\end{itemize}
+\end{itemize}
+
+\item get-results
+\begin{itemize}
+\item Input:
+\begin{itemize}
+\item job ID
+\end{itemize}
+\item Output:
+\begin{itemize}
+\item SARIF results
+\item CodeQL databases (optional, if explicitly requested)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\subsection{MRVA Convenience UI for gh-mrva (Optional, Replaceable)}
+\label{sec:orgf19b4af}
+\begin{itemize}
+\item Purpose:  Reduce friction for humans.
+
+\item Implementations
+\begin{itemize}
+\item Basic UI (Python / Tk)
+\begin{itemize}
+\item thin wrapper over gh-mrva
+\item submit jobs
+\item poll status
+\item fetch SARIF
+\item minimal result listing
+
+\item Properties:
+\begin{itemize}
+\item disposable
+\item non-authoritative
+\item allowed to be ugly
+\end{itemize}
+\end{itemize}
+
+\item Fancy UI (VS Code extension)
+\begin{itemize}
+\item strictly a gh-mrva client
+\item no embedded execution logic
+\item no hidden or private APIs
+\end{itemize}
+\end{itemize}
+
+\item Key rule:
+If a VS Code extension requires more privileges or APIs than shell access
+to gh-mrva, the design is incorrect.
+\end{itemize}
+\subsection{MRVA Core Result Handler (Post-Processing Layer)}
+\label{sec:org35c5525}
+\begin{itemize}
+\item Purpose:
+Transform raw SARIF into a structured, queryable dataset.
+
+\item Responsibilities:
+\begin{itemize}
+\item ingest SARIF
+\item normalize fields
+\item load data into DuckDB
+\item preserve references to:
+\begin{itemize}
+\item repository
+\item database
+\item query
+\item execution metadata
+\end{itemize}
+\end{itemize}
+
+\item Output:
+A read-only analytical store.
+
+\item Dependency rules:
+\begin{itemize}
+\item MRVA core does not depend on DuckDB
+\item DuckDB ingestion depends on MRVA output
+\end{itemize}
+\end{itemize}
+\subsection{Non-core: Query Editing}
+\label{sec:org10625ca}
+\begin{itemize}
+\item Scope: Query editing is not MRVA.
+
+\item Location
+\begin{itemize}
+\item VS Code
+\item Plain filesystem
+\item Existing CodeQL tooling
+\end{itemize}
+
+\item Relationship to MRVA:
+\begin{itemize}
+\item MRVA:
+\begin{itemize}
+\item consumes queries
+\item does not assist with authoring
+\item does not validate intent
+\end{itemize}
+\end{itemize}
+
+\item This separation avoids:
+\begin{itemize}
+\item IDE entanglement
+\item schema drift
+\item toolchain coupling
+\end{itemize}
+\end{itemize}
+\subsection{Development}
+\label{sec:org0f0dabe}
+\begin{itemize}
+\item Definition: Development is everything that exists to change MRVA.
+
+\item Scope Includes
+\begin{itemize}
+\item source code
+\item build scripts
+\item test scaffolding
+\item experimental tools
+\item refactors
+\item prototype UIs
+\item temporary glue
+\end{itemize}
+
+\item Properties
+\begin{itemize}
+\item Mutable
+\item Incomplete
+\item Allowed to be ugly
+\item Allowed to be slow
+\item Allowed to break
+\end{itemize}
+
+\item Key Rule: Nothing in development is relied upon at runtime unless explicitly
+promoted to deployment.
+\end{itemize}
+\subsection{Deployment}
+\label{sec:org8f8aecc}
+\begin{itemize}
+\item Definition: Deployment is the sealed, operated system.
+This is what users run.
+
+\item Scope includes:
+\begin{itemize}
+\item MRVA core binaries or containers
+\item gh-mrva
+\item fixed execution environments (Linux)
+\item deterministic configuration
+\end{itemize}
+
+\item Properties:
+\begin{itemize}
+\item immutable (by policy)
+\item reproducible
+\item predictable
+\item auditable
+\end{itemize}
+
+\item Key rule:
+Deployment artifacts must be buildable from development using a fixed,
+documented procedure.
+\end{itemize}
+\subsection{Documentation}
+\label{sec:orgc6b6f12}
+Documentation is split along the following axes:
+\begin{itemize}
+\item system: definitions, structure
+\item development: setup, use
+\item deployment: setup, use
+\end{itemize}
+\end{document}

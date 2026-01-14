@@ -1,0 +1,206 @@
+% Created 2026-01-13 Tue 22:24
+% Intended LaTeX compiler: lualatex
+\documentclass[11pt]{article}
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{newunicodechar}
+\usepackage{newunicodechar}
+\newunicodechar{₁}{\ensuremath{_1}}
+\newunicodechar{₂}{\ensuremath{_2}}
+\newunicodechar{₃}{\ensuremath{_3}}
+\newunicodechar{₄}{\ensuremath{_4}}
+\newunicodechar{₅}{\ensuremath{_5}}
+\newunicodechar{₆}{\ensuremath{_6}}
+\newunicodechar{₇}{\ensuremath{_7}}
+\newunicodechar{₈}{\ensuremath{_8}}
+\newunicodechar{₉}{\ensuremath{_9}}
+\newunicodechar{₀}{\ensuremath{_0}}
+\newunicodechar{ₐ}{\ensuremath{_a}}
+\newunicodechar{ₑ}{\ensuremath{_e}}
+\newunicodechar{ₒ}{\ensuremath{_o}}
+\newunicodechar{ₓ}{\ensuremath{_x}}
+\newunicodechar{ₙ}{\ensuremath{_n}}
+\newunicodechar{ₖ}{\ensuremath{_k}}
+\newunicodechar{ₘ}{\ensuremath{_m}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{…}{\ensuremath{\ldots}}
+\newunicodechar{≈}{\ensuremath{\mathrel{\approx}}}
+\newunicodechar{↓}{\ensuremath{\mathrel{\downarrow}}}
+\newunicodechar{✅}{\textcolor{green!50!black}{\ensuremath{\checkmark}}}
+\newunicodechar{❌}{\textcolor{red!70!black}{\ensuremath{\times}}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{⊂}{\ensuremath{\subset}}
+\newunicodechar{⊃}{\ensuremath{\supset}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{⊇}{\ensuremath{\supseteq}}
+\newunicodechar{⟶}{\ensuremath{\longrightarrow}}
+\newunicodechar{⟵}{\ensuremath{\longleftarrow}}
+\newunicodechar{⋯}{\ensuremath{\cdots}}
+\newunicodechar{…}{\ensuremath{\ldots}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+\newunicodechar{⊨}{\ensuremath{\vDash}}
+\newunicodechar{⊥}{\ensuremath{\bot}}
+\newunicodechar{⊤}{\ensuremath{\top}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{⇔}{\ensuremath{\Leftrightarrow}}
+\usepackage[
+paper=letterpaper,
+left=1in,
+right=1in,
+top=1in,
+bottom=1in
+]{geometry}
+\usepackage{fontspec}
+\setmainfont{Avenir Next}[
+UprightFont = *,
+ItalicFont = * Italic,
+BoldFont = * Demi Bold,
+BoldItalicFont = * Demi Bold Italic
+]
+\author{Michael Hohn}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={Michael Hohn},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 30.2 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+
+\section{MRVA deployment documentation}
+\label{sec:orgfc0bd4b}
+To understand what is being deployed we start with a brief overview of the MRVA
+components and what they are.  The structure is illustrated at the container
+level; the contents of the containers are described in full detail in their
+\texttt{Dockerfiles}.  The full assembly sequence, from source, is described in the
+\hyperref[sec:org6f1c38a]{Build Procedure}.  This deployment document stays at the container level, only
+referencing the developer details.
+
+The full list of containers is found in \url{../submodules/mrva-docker/docker-compose-demo.yml}
+and their Dockerfiles in \url{../submodules/mrva-docker/containers/}.
+
+The ones part of the mrva system are submodules of this repository --
+\url{../submodules/}. They are
+\begin{itemize}
+\item gh-mrva
+\item mrvaagent
+\item mrvaserver
+\item mrvacommander
+\item mrvahepc
+\end{itemize}
+
+Also used are public containers:
+\begin{itemize}
+\item postgres
+\item rabbitmq
+\item minio
+\end{itemize}
+
+To clarify their roles and responsibilities, we can group these into
+\begin{enumerate}
+\item Internal containers:  MRVA proper
+\item Stock containers: public containers providing services in the mrva network
+\item Example service: This container is provided only as example service to make
+MRVA functional.  The expectation is that this service is externally
+provided in deployments
+\end{enumerate}
+
+With this grouping, we can describe the containers' function:
+\begin{enumerate}
+\item Internal containers:  MRVA proper, consisting of 
+\begin{itemize}
+\item \texttt{gh-mrva}.  A user/shell-driven service with three functions:
+\begin{enumerate}
+\item submit request
+\item check status
+\item download results (and optionally, DBs)
+\end{enumerate}
+\item \texttt{mrvaserver}.  The outside-facing service, it receives \texttt{gh-mrva} requests
+and orchestrates their processesing by the other services.
+\item \texttt{mrvaagent}.  This is the internal job runner; it performs performs the
+analyses and returns results.  Specifically:
+\begin{itemize}
+\item pick up jobs
+\item picks up DBs via / from from mrvahepc
+\item run \texttt{codeql database analyze}
+\item return results to rabbitmq
+\end{itemize}
+\item \texttt{mrvacommander}.  This is pure library code for \texttt{mrvaagent} and \texttt{mrvaserver}
+\item mrva-docker -- docker containers assembled from other repos
+\url{https://github.com/hohn/mrva-docker}
+\end{itemize}
+
+\item stock containers / services on deployment
+\begin{itemize}
+\item rabbitmq
+\item postgres
+\item minio
+\end{itemize}
+
+\item provided service / external.  This container is provided only as example;
+the expectation is that this service is externally provided.
+
+\begin{itemize}
+\item mrvahepc -- endpoint for codeql DBs and metadata
+\begin{itemize}
+\item in-container-network service provides metadata
+\item external service (here, https), provides the actual databases
+\item this service intended for replacement
+
+\item reference:
+\begin{itemize}
+\item \url{https://github.com/hohn/mrvahepc/tree/master}
+\item \url{https://github.com/hohn/mrvahepc/tree/master?tab=readme-ov-file\#usage-sample-for-containers}
+\item schema / json format: \url{https://github.com/hohn/mrvahepc/blob/master/bin/mc-hepc-init\#L65}
+\end{itemize}
+
+\item \textbf{Fixed API}:
+\begin{itemize}
+\item schema / json format: \url{https://github.com/hohn/mrvahepc/blob/master/bin/mc-hepc-init\#L65}
+\item serves metadata -- provide info
+\{"git\textsubscript{branch}": "HEAD", "git\textsubscript{commit}\textsubscript{id}": "dc0c7f3de40530053189c572936ae4fd1567269b", "git\textsubscript{repo}": "bulk-builder", "ingestion\textsubscript{datetime}\textsubscript{utc}": "2022-11-30T00:44:34.455172576Z", "result\textsubscript{url}": "\url{http://hepc/db/db-collection.tmp/bulk-builder-bulk-builder-ctsj-a8e72a.zip}", "tool\textsubscript{id}": "9f2f9642-febb-4435-9204-fb50bbd43de4", "tool\textsubscript{name}": "codeql-cpp", "tool\textsubscript{version}": "2.11.3", "projname": "bulk-builder/bulk-builder"\}
+\item served content listed in metadata -- via https in this example.
+The field is fixed, the url is arbitrary.
+\begin{itemize}
+\item "result\textsubscript{url}":
+"\url{http://hepc/db/db-collection.tmp/bulk-builder-bulk-builder-ctsj-a8e72a.zip}"
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{enumerate}
+
+The container assembly is driven via the \texttt{mrva-docker} repository.
+\section{Build Procedure}
+\label{sec:org6f1c38a}
+\end{document}

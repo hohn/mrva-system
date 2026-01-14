@@ -1,0 +1,266 @@
+#+LATEX_COMPILER: lualatex
+
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \usepackage{newunicodechar}
+
+#+LATEX_HEADER: \usepackage{newunicodechar}
+
+#+LATEX_HEADER: \newunicodechar{₁}{\ensuremath{_1}}
+#+LATEX_HEADER: \newunicodechar{₂}{\ensuremath{_2}}
+#+LATEX_HEADER: \newunicodechar{₃}{\ensuremath{_3}}
+#+LATEX_HEADER: \newunicodechar{₄}{\ensuremath{_4}}
+#+LATEX_HEADER: \newunicodechar{₅}{\ensuremath{_5}}
+#+LATEX_HEADER: \newunicodechar{₆}{\ensuremath{_6}}
+#+LATEX_HEADER: \newunicodechar{₇}{\ensuremath{_7}}
+#+LATEX_HEADER: \newunicodechar{₈}{\ensuremath{_8}}
+#+LATEX_HEADER: \newunicodechar{₉}{\ensuremath{_9}}
+#+LATEX_HEADER: \newunicodechar{₀}{\ensuremath{_0}}
+
+#+LATEX_HEADER: \newunicodechar{ₐ}{\ensuremath{_a}}
+#+LATEX_HEADER: \newunicodechar{ₑ}{\ensuremath{_e}}
+#+LATEX_HEADER: \newunicodechar{ₒ}{\ensuremath{_o}}
+#+LATEX_HEADER: \newunicodechar{ₓ}{\ensuremath{_x}}
+#+LATEX_HEADER: \newunicodechar{ₙ}{\ensuremath{_n}}
+#+LATEX_HEADER: \newunicodechar{ₖ}{\ensuremath{_k}}
+#+LATEX_HEADER: \newunicodechar{ₘ}{\ensuremath{_m}}
+#+LATEX_HEADER: \newunicodechar{≡}{\ensuremath{\equiv}}
+#+LATEX_HEADER: \newunicodechar{…}{\ensuremath{\ldots}}
+
+#+LATEX_HEADER: \newunicodechar{≈}{\ensuremath{\mathrel{\approx}}}
+#+LATEX_HEADER: \newunicodechar{↓}{\ensuremath{\mathrel{\downarrow}}}
+#+LATEX_HEADER: \newunicodechar{✅}{\textcolor{green!50!black}{\ensuremath{\checkmark}}}
+#+LATEX_HEADER: \newunicodechar{❌}{\textcolor{red!70!black}{\ensuremath{\times}}}
+#+LATEX_HEADER: \newunicodechar{∣}{\ensuremath{\mid}}
+#+LATEX_HEADER: \newunicodechar{∈}{\ensuremath{\in}}
+#+LATEX_HEADER: \newunicodechar{→}{\ensuremath{\to}}
+#+LATEX_HEADER: \newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+#+LATEX_HEADER: \newunicodechar{↦}{\ensuremath{\mapsto}}
+#+LATEX_HEADER: \newunicodechar{≥}{\ensuremath{\ge}}
+#+LATEX_HEADER: \newunicodechar{≤}{\ensuremath{\le}}
+#+LATEX_HEADER: \newunicodechar{≡}{\ensuremath{\equiv}}
+#+LATEX_HEADER: \newunicodechar{⊂}{\ensuremath{\subset}}
+#+LATEX_HEADER: \newunicodechar{⊃}{\ensuremath{\supset}}
+#+LATEX_HEADER: \newunicodechar{⊆}{\ensuremath{\subseteq}}
+#+LATEX_HEADER: \newunicodechar{⊇}{\ensuremath{\supseteq}}
+#+LATEX_HEADER: \newunicodechar{⟶}{\ensuremath{\longrightarrow}}
+#+LATEX_HEADER: \newunicodechar{⟵}{\ensuremath{\longleftarrow}}
+#+LATEX_HEADER: \newunicodechar{⋯}{\ensuremath{\cdots}}
+#+LATEX_HEADER: \newunicodechar{…}{\ensuremath{\ldots}}
+#+LATEX_HEADER: \newunicodechar{∪}{\ensuremath{\cup}}
+#+LATEX_HEADER: \newunicodechar{∩}{\ensuremath{\cap}}
+#+LATEX_HEADER: \newunicodechar{∧}{\ensuremath{\wedge}}
+#+LATEX_HEADER: \newunicodechar{∨}{\ensuremath{\vee}}
+#+LATEX_HEADER: \newunicodechar{¬}{\ensuremath{\neg}}
+#+LATEX_HEADER: \newunicodechar{∀}{\ensuremath{\forall}}
+#+LATEX_HEADER: \newunicodechar{∃}{\ensuremath{\exists}}
+#+LATEX_HEADER: \newunicodechar{⊢}{\ensuremath{\vdash}}
+#+LATEX_HEADER: \newunicodechar{⊨}{\ensuremath{\vDash}}
+#+LATEX_HEADER: \newunicodechar{⊥}{\ensuremath{\bot}}
+#+LATEX_HEADER: \newunicodechar{⊤}{\ensuremath{\top}}
+#+LATEX_HEADER: \newunicodechar{∅}{\ensuremath{\emptyset}}
+#+LATEX_HEADER: \newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+#+LATEX_HEADER: \newunicodechar{⇔}{\ensuremath{\Leftrightarrow}}
+
+#+LATEX_HEADER: \usepackage[
+#+LATEX_HEADER:   paper=letterpaper,
+#+LATEX_HEADER:   left=1in,
+#+LATEX_HEADER:   right=1in,
+#+LATEX_HEADER:   top=1in,
+#+LATEX_HEADER:   bottom=1in
+#+LATEX_HEADER: ]{geometry}
+
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \setmainfont{Avenir Next}[
+#+LATEX_HEADER:   UprightFont = *,
+#+LATEX_HEADER:   ItalicFont = * Italic,
+#+LATEX_HEADER:   BoldFont = * Demi Bold,
+#+LATEX_HEADER:   BoldItalicFont = * Demi Bold Italic
+#+LATEX_HEADER: ]
+
+# #+LATEX_HEADER: \usepackage{fontspec}
+# #+LATEX_HEADER: \setmainfont{CMU Bright}
+# #+LATEX_HEADER: \setsansfont{CMU Bright}
+# #+LATEX_HEADER: \setmonofont{CMU Typewriter Text}
+
+#+HTML_HEAD: <style>
+#+HTML_HEAD: body {
+#+HTML_HEAD:   font-family: "Avenir Next", "Avenir", "Average Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+#+HTML_HEAD:   font-weight: 400;
+#+HTML_HEAD:   line-height: 1.5;
+#+HTML_HEAD: }
+#+HTML_HEAD: code, pre, tt {
+#+HTML_HEAD:   font-family: "CMU Typewriter Text", "CMU Typewriter", "Courier New", monospace;
+#+HTML_HEAD:   font-size: 0.95em;
+#+HTML_HEAD:   background-color: #f8f8f8;
+#+HTML_HEAD:   border-radius: 4px;
+#+HTML_HEAD:   padding: 0.1em 0.25em;
+#+HTML_HEAD: }
+#+HTML_HEAD: pre {
+#+HTML_HEAD:   padding: 0.6em;
+#+HTML_HEAD:   border: 1px solid #ddd;
+#+HTML_HEAD:   background-color: #fdfdfd;
+#+HTML_HEAD:   overflow-x: auto;
+#+HTML_HEAD: }
+#+HTML_HEAD: </style>
+
+# #+OPTIONS: author:nil date:nil html-validation-link:nil
+# #+OPTIONS: creator:nil
+# #+OPTIONS: html-postamble:nil
+#+OPTIONS: H:2 num:t \n:nil @:t ::t |:t ^:{} f:t *:t TeX:t LaTeX:t skip:nil p:nil
+
+* MRVA deployment documentation
+
+** Introduction
+  This document describes the /deployment-level/ structure of MRVA.  The goal is to
+  explain /what/ is deployed and /how the pieces relate/, without descending into
+  developer-level or implementation details.
+
+  We therefore stay strictly at the /container level/.  The internal structure of
+  each container is fully specified by its =Dockerfile=; those details are treated
+  as authoritative and are not duplicated here.  The complete, reproducible
+  assembly process—starting from source—is described in the
+  [[*Build Procedure][Build Procedure]] section.
+
+  The canonical list of containers used in a reference deployment is defined in
+
+  - [[../submodules/mrva-docker/docker-compose-demo.yml]]
+
+  with corresponding Dockerfiles located in
+
+  - [[../submodules/mrva-docker/containers/]]
+
+  Only containers that are part of the MRVA system itself are discussed in this
+  document; stock infrastructure containers are treated as external services.
+
+** Container groups
+
+   For clarity, containers are grouped by responsibility:
+
+   1. *Internal containers*: MRVA proper
+   2. *Stock containers*: off-the-shelf services used by MRVA
+   3. *Externally provided services*: required services that are expected to be
+      supplied by the deployment environment (a reference implementation is
+      provided for convenience)
+
+   This grouping reflects responsibility boundaries rather than implementation
+   details.
+
+** Internal containers: MRVA proper
+
+   The following repositories are submodules of this repository
+   ([[../submodules/]]) and together constitute MRVA itself:
+
+   - =gh-mrva=
+   - =mrvaserver=
+   - =mrvaagent=
+   - =mrvacommander=
+   - =mrvahepc= (reference implementation only; see below)
+
+   Their roles are as follows:
+
+   - =gh-mrva=
+     A user-driven, shell-oriented frontend providing three operations:
+     1. submit analysis requests
+     2. query request status
+     3. download results (and optionally CodeQL databases)
+
+   - =mrvaserver=
+     The externally facing service.  It receives requests from =gh-mrva= and
+     orchestrates their execution by coordinating the internal services.
+
+   - =mrvaagent=
+     The internal job runner.  It performs the actual analyses:
+     - consumes jobs
+     - retrieves database metadata (and possibly databases) via =mrvahepc=
+     - runs =codeql database analyze=
+     - returns results via RabbitMQ
+
+   - =mrvacommander=
+     Shared library code used by both =mrvaserver= and =mrvaagent=.  It contains no
+     standalone service logic.
+
+   - =mrva-docker=
+     The container-assembly repository that defines how all MRVA containers are
+     built and composed:
+     https://github.com/hohn/mrva-docker
+
+** Stock containers (infrastructure services)
+
+   These are unmodified, publicly available containers that provide standard
+   infrastructure services within the MRVA deployment:
+
+   - =postgres=
+   - =rabbitmq=
+   - =minio=
+
+   They are treated as replaceable components, provided they satisfy the expected
+   interfaces.
+
+** Externally provided services
+
+   Some services are required by MRVA but are expected to be supplied externally in
+   real deployments.  A reference implementation is provided only to make the
+   system self-contained.
+
+   - =mrvahepc=
+     Endpoint for CodeQL database metadata and (optionally) database content.
+
+     This container is provided *only as an example*.  In production deployments,
+     this service is expected to be external to MRVA.
+
+     Responsibilities:
+     - serve CodeQL database metadata inside the container network
+     - optionally serve the actual CodeQL databases
+       (the reference implementation uses an external HTTPS server for DB content)
+     - act as a replaceable, API-stable component
+
+     Reference implementation:
+     - https://github.com/hohn/mrvahepc/tree/master
+
+*** Fixed API contract of =mrvahepc=
+
+    The =mrvahepc= service exposes a *fixed API* that MRVA relies on.
+
+    - Metadata endpoint:
+      - returns a JSON array
+      - schema definition:
+        https://github.com/hohn/mrvahepc/blob/master/bin/mc-hepc-init#L65
+      - example payload:
+
+        #+begin_src javascript
+          [
+              {
+                  "git_branch": "HEAD",
+                  "git_commit_id": "dc0c7f3de40530053189c572936ae4fd1567269b",
+                  "git_repo": "bulk-builder",
+                  "ingestion_datetime_utc": "2022-11-30T00:44:34.455172576Z",
+                  "result_url": "http://hepc/db/db-collection.tmp/bulk-builder-bulk-builder-ctsj-a8e72a.zip",
+                  "tool_id": "9f2f9642-febb-4435-9204-fb50bbd43de4",
+                  "tool_name": "codeql-cpp",
+                  "tool_version": "2.11.3",
+                  "projname": "bulk-builder/bulk-builder"
+              }
+          ]
+        #+end_src
+
+    - Content serving:
+      - actual database content is referenced via the metadata
+      - the metadata field name is fixed:
+        - ="result_url"=
+      - the URL itself is arbitrary and deployment-specific, e.g.:
+
+        ="http://hepc/db/db-collection.tmp/bulk-builder-bulk-builder-ctsj-a8e72a.zip"=
+
+    As long as this API contract is respected, =mrvahepc= can be freely replaced.
+
+** Container assembly
+
+   The assembly and composition of all containers is driven by the
+   =mrva-docker= repository.  This deployment document intentionally stops at the
+   container boundary; build mechanics and developer-level concerns are covered
+   elsewhere.
+
+* Build Procedure
+
