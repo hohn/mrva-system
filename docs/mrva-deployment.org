@@ -278,9 +278,6 @@
   - emit logs and verification markers
   - may be re-run once prerequisites exist
 ** TODO add mrva hepc loading steps
-** TODO remove "latest"
-** TODO explicit --platform in docker run
-** TODO explicit --platform in docker build
 ** TODO docker inspect --format '{{.Os}}/{{.Architecture}}' mrva-gh-mrva:0.4.7
 ** TODO add mrva-platform image with all tools
    # https://chatgpt.com/g/g-p-67b4e0777f708191a749244e016fe7e8/c/69652e16-0038-832b-97df-f54470f307cd
@@ -291,7 +288,7 @@
 
    - No Docker image reference may exist without an explicit version or digest.
      
-   - [ ] combine common Docker image tools into one base image, mrva-platform
+   - [X] combine common Docker image tools into one base image, mrva-platform
      gpt: https://chatgpt.com/g/g-p-67b4e0777f708191a749244e016fe7e8-mrva/c/69652e16-0038-832b-97df-f54470f307cd
      Goal:
      - combine common Docker image tools into one base image, mrva-platform
@@ -762,9 +759,13 @@
        exit 0
      #+END_SRC
 
-   - [ ] add mrva-platform image with all tools
+   - [X] add mrva-platform image with all tools
      use union of existing Dockerfiles
      
 * TODO MRVA end-to-end test
+  Test the new assembly 
+  - scripts: [hohn@thelio24 ~/work-gh/mrva/mrva-system/scripts]$
+  - Dockefiles:[hohn@thelio24 /mnt/common/home/hohn/work-gh/mrva/mrva-system/submodules/mrva-docker/containers]$
+
 * TODO Pushing MRVA containers
   
