@@ -279,7 +279,9 @@
   - may be re-run once prerequisites exist
 ** TODO add mrva hepc loading steps
 ** TODO docker inspect --format '{{.Os}}/{{.Architecture}}' mrva-gh-mrva:0.4.7
-** TODO add mrva-platform image with all tools
+** DONE add mrva-platform image with all tools
+   CLOSED: [2026-01-15 Thu 13:25]
+   - State "DONE"       from "NEXT"       [2026-01-15 Thu 13:25]
    # https://chatgpt.com/g/g-p-67b4e0777f708191a749244e016fe7e8/c/69652e16-0038-832b-97df-f54470f307cd
    # abstraction: a “platform base image
 
