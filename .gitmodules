@@ -10,9 +10,9 @@
 [submodule "submodules/mrvaserver"]
 	path = submodules/mrvaserver
 	url = git@github.com:hohn/mrvaserver.git
-[submodule "submodules/mrvahepc"]
-	path = submodules/mrvahepc
-	url = git@github.com:hohn/mrvahepc.git
+[submodule "submodules/mrva-go-hepc"]
+	path = submodules/mrva-go-hepc
+	url = git@github.com:data-douser/mrva-go-hepc.git
 [submodule "submodules/mrva-docker"]
 	path = submodules/mrva-docker
-	url = git@github.com:hohn/mrva-docker.git
+	url = git@github.com:data-douser/mrva-docker.git

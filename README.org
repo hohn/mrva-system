@@ -1,11 +1,80 @@
-MRVA System Blueprint
+#+TITLE: MRVA System
+#+OPTIONS: toc:2 num:nil
 
-This repository defines the MRVA system:
-- component composition
-- interfaces
-- procedures
+* Overview
 
-It contains no deployment state.
+MRVA (Multi-Repository Variant Analysis) System enables running CodeQL queries across multiple repositories simultaneously.
 
-mrva-system is the blueprint.
-mrva-deploy is the scratch paper.
+- *mrva-system* is the blueprint (composition, interfaces, procedures)
+- *mrva-deploy* is the scratch paper (runtime state, secrets)
+
+* Architecture
+
+#+BEGIN_SRC
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  gh-mrva    │────▶│   server    │────▶│  rabbitmq   │
+│  (client)   │     │  (REST API) │     │  (queue)    │
+└─────────────┘     └─────────────┘     └──────┬──────┘
+                                               │
+┌─────────────┐     ┌─────────────┐     ┌──────▼──────┐
+│   minio     │◀────│    hepc     │◀────│    agent    │
+│  (results)  │     │ (databases) │     │  (worker)   │
+└─────────────┘     └─────────────┘     └─────────────┘
+#+END_SRC
+
+* Submodules
+
+| Module         | Purpose                          | Language |
+|----------------+----------------------------------+----------|
+| mrva-go-hepc   | HTTP Endpoint Provider for CodeQL databases | Go |
+| mrva-docker    | Container configs & Helm charts  | Docker   |
+| mrvaserver     | MRVA REST API server             | Go       |
+| mrvaagent      | CodeQL analysis worker           | Go       |
+| mrvacommander  | Shared library (HEPC client, etc.)| Go      |
+| gh-mrva        | GitHub CLI extension             | Go       |
+
+* Docker Images
+
+All custom images use the =codeql-mrva-= prefix:
+
+| Image                    | Source                     |
+|--------------------------+----------------------------|
+| codeql-mrva-server       | containers/server          |
+| codeql-mrva-agent        | containers/agent           |
+| codeql-mrva-hepc         | mrva-go-hepc               |
+| codeql-mrva-ghmrva       | containers/ghmrva          |
+| codeql-mrva-vscode       | containers/vscode          |
+
+Images are published to =ghcr.io/data-douser/=.
+
+* Quick Start
+
+#+BEGIN_SRC bash
+# Clone with submodules
+git clone --recursive git@github.com:data-douser/mrva-system.git
+cd mrva-system
+
+# Or initialize submodules after clone
+git submodule update --init --recursive
+
+# Deploy via Helm (requires Kubernetes cluster)
+helm install mrva ./submodules/mrva-docker/k8s/codeql-mrva-chart \
+  --namespace mrva --create-namespace \
+  -f production-values.yaml
+#+END_SRC
+
+* Documentation
+
+- [[./docs/DEPLOYMENT_PLAN.md][Deployment Plan]] — Phase-by-phase integration guide
+- [[./docs/SUBMODULES.md][Submodules Guide]] — Branch tracking & update procedures
+
+* Ports Reference
+
+| Service    | Port  | Protocol |
+|------------+-------+----------|
+| Server     | 8080  | HTTP     |
+| Agent      | 8071  | HTTP     |
+| HEPC       | 8070  | HTTP     |
+| PostgreSQL | 5432  | TCP      |
+| RabbitMQ   | 5672  | AMQP     |
+| MinIO API  | 9000  | HTTP     |
