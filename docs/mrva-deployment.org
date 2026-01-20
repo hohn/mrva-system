@@ -263,14 +263,33 @@
    elsewhere.
 
 * MRVA Build Order
-  This document defines execution order.
-  Scripts define state; this document defines sequence.
+  - This document defines execution order.
+  - Scripts define state; this document defines sequence.
+  - Use a single platform -- amd64 or arm64 -- for all steps to avoid
+    cross-platform incompatibilities from Docker.  Docker build and run treat
+    =--platform= differently; we don't use it here.
+  - MRVA executes natively on a single host architecture per deployment.
+    Cross-architecture builds and runtime emulation are intentionally
+    unsupported.  Docker’s --platform flag is not used, as it introduces divergent
+    semantics between build and run. All artifacts (scratch, images, binaries) are
+    host-bound and must not be shared across architectures.
 
-  1. prepare-scratch.sh
-  2. build-gh-mrva.sh
-  3. build-mrvaserver.sh
-  4. build-mrvaagent.sh
-  5. build-mrvahepc.sh
+  Steps
+  1. [[../scripts/prepare-scratch.sh][prepare-scratch.sh]]
+  2. [[../scripts/build-mrvaplatform.sh][build-mrvaplatform.sh]]
+     - image name mrva-platform:0.4.7
+  3. [[../scripts/build-gh-mrva.sh][build-gh-mrva.sh]]
+  4. [[../scripts/build-mrvaserver.sh][build-mrvaserver.sh]]
+  5. [[../scripts/build-mrvaagent.sh][build-mrvaagent.sh]]
+  6. [[../scripts/build-mrvahepc.sh][build-mrvahepc.sh]]
+  7. [[../scripts/build-image-mrvahepc.sh][build-image-mrvahepc]]
+  8. [[../scripts/build-image-gh-mrva.sh][build-image-gh-mrva]]
+  9. build-image-mrvaagent.sh
+  10. build-image-mrvaagent.sh
+  11. build-image-mrvahepc.sh
+  12. build-image-mrvaserver.sh
+
+      
 
   All scripts:
   - are self-locating
@@ -279,9 +298,6 @@
   - may be re-run once prerequisites exist
      
 * TODO MRVA end-to-end test
-  Test the new assembly 
-  - scripts: [hohn@thelio24 ~/work-gh/mrva/mrva-system/scripts]$
-  - Dockefiles:[hohn@thelio24 /mnt/common/home/hohn/work-gh/mrva/mrva-system/submodules/mrva-docker/containers]$
 
 * TODO Pushing MRVA containers
   

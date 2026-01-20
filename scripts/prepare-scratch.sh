@@ -2,59 +2,43 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MRVA_SYSTEM_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SCRATCH="$ROOT/deploy-scratch"
 
-SCRATCH_DIR="$MRVA_SYSTEM_ROOT/deploy-scratch"
+if [[ "${1:-}" == "-h" ]]; then
+cat <<'HLP'
+prepare-scratch.sh
 
-# -----------------------------------------------------------------------------
-# prepare-scratch.sh
-#
-# Create a fresh deployment scratch directory.
-#
-# This directory holds all mutable, instance-specific state.
-# It is NOT a git repository.
-#
-# mrva-system is the blueprint.
-# deploy-scratch is the scratch paper.
-# -----------------------------------------------------------------------------
+Reads:
+  - none
 
-echo "==> Preparing deployment scratch directory: $SCRATCH_DIR"
+Writes:
+  - deploy-scratch/state/*
+  - deploy-scratch/README.org
 
-# Top-level
-mkdir -p "$SCRATCH_DIR"
+Produces:
+  - deploy-scratch/state/verified/scratch.initialized
 
-# State hierarchy
-mkdir -p "$SCRATCH_DIR/state"/{config,generated,verified,logs}
-
-# Execution helpers
-mkdir -p "$SCRATCH_DIR/run"
-
-# Local notes / environment
-mkdir -p "$SCRATCH_DIR/env"
-
-# Instance README (only created if missing)
-README="$SCRATCH_DIR/README.org"
-if [ ! -f "$README" ]; then
-    cat > "$README" <<'EOF'
-#+TITLE: MRVA Deployment Scratch
-
-This directory contains instance-specific, mutable deployment state.
-
-- It is not a git repository.
-- It may be modified freely.
-- It may be deleted and recreated at any time.
-
-Authoritative definitions live in the mrva-system repository.
-
-Use this file for:
-- local notes
-- site-specific decisions
-- operational observations
-EOF
+Idempotent: yes
+HLP
+exit 0
 fi
 
-echo "==> Scratch directory ready"
-echo "    Path: $SCRATCH_DIR"
+mkdir -p "$SCRATCH"/{env,run}
+mkdir -p "$SCRATCH/state"/{config,generated,logs,verified}
 
-# Explicit success marker (optional but useful)
-touch "$SCRATCH_DIR/state/verified/scratch.initialized"
+README="$SCRATCH/README.org"
+if [ ! -f "$README" ]; then
+cat > "$README" <<'EOF2'
+#+TITLE: MRVA Deployment Scratch
+
+Instance-specific, mutable deployment state.
+Not a git repository.
+Safe to delete and recreate.
+
+mrva-system is the blueprint.
+deploy-scratch is the scratch paper.
+EOF2
+fi
+
+touch "$SCRATCH/state/verified/scratch.initialized"
