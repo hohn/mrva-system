@@ -11,8 +11,6 @@
   mrva-deploy is the scratch paper.
 
 * Usage
-  #+BEGIN_SRC sh 
-    ./scripts/prepare-scratch.sh
-  #+END_SRC
+  - Building from source: [[file:docs/mrva-deployment.org::*MRVA Build Order][MRVA Build Order]]
 
   

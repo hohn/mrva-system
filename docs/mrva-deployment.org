@@ -334,7 +334,4 @@
   - emit logs and verification markers
   - may be re-run once prerequisites exist
      
-* TODO MRVA end-to-end test
-
-* TODO Pushing MRVA containers
   
