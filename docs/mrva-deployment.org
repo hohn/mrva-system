@@ -199,35 +199,6 @@
 
 ** Externally provided services
 
-   Some services are required by MRVA but are expected to be supplied externally in
-   real deployments.  A reference implementation is provided only to make the
-   system self-contained.
-
-   - *NOTE*: the default hepc service references https://hohnlab.org/mrva/values/
-     for access to about 90 GB of open-source CodeQL databases.  E.g.,
-     : result_url = https://hohnlab.org/mrva/values/face-alignment-face-alignment-ctsj-a930b5f031-10d49c933cf269e4.zip
-
-   - This service is *expected* to exist.
-
-   - The API is trivial.  See hepc for details.
-
-   - =mrvahepc=
-     Endpoint for CodeQL database metadata and (optionally) database content.
-
-     This container is provided *only as an example*.  In production deployments,
-     this service is expected to be external to MRVA.
-
-     Responsibilities:
-     - serve CodeQL database metadata inside the container network
-     - optionally serve the actual CodeQL databases
-       (the reference implementation uses an external HTTPS server for DB content)
-     - act as a replaceable, API-stable component
-
-     Reference implementation:
-     - https://github.com/hohn/mrvahepc/tree/master
-
-** Externally provided services
-
    MRVA depends on a small number of services that are *logically required* but are
    expected to be supplied externally in real deployments.  Reference
    implementations are provided solely to make the system self-contained and
