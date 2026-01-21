@@ -111,7 +111,6 @@
 #+OPTIONS: H:2 num:t \n:nil @:t ::t |:t ^:{} f:t *:t TeX:t LaTeX:t skip:nil p:nil
 
 * MRVA deployment documentation
-
 ** Introduction
   This document describes the /deployment-level/ structure of MRVA.  The goal is to
   explain /what/ is deployed and /how the pieces relate/, without descending into
@@ -204,6 +203,14 @@
    real deployments.  A reference implementation is provided only to make the
    system self-contained.
 
+   - *NOTE*: the default hepc service references https://hohnlab.org/mrva/values/
+     for access to about 90 GB of open-source CodeQL databases.  E.g.,
+     : result_url = https://hohnlab.org/mrva/values/face-alignment-face-alignment-ctsj-a930b5f031-10d49c933cf269e4.zip
+
+   - This service is *expected* to exist.
+
+   - The API is trivial.  See hepc for details.
+
    - =mrvahepc=
      Endpoint for CodeQL database metadata and (optionally) database content.
 
@@ -215,6 +222,40 @@
      - optionally serve the actual CodeQL databases
        (the reference implementation uses an external HTTPS server for DB content)
      - act as a replaceable, API-stable component
+
+     Reference implementation:
+     - https://github.com/hohn/mrvahepc/tree/master
+
+** Externally provided services
+
+   MRVA depends on a small number of services that are *logically required* but are
+   expected to be supplied externally in real deployments.  Reference
+   implementations are provided solely to make the system self-contained and
+   immediately usable.
+
+   - *NOTE*: The default =hepc= configuration references
+     https://hohnlab.org/mrva/values/ for access to approximately 70–90 GB of
+     open-source CodeQL databases.  For example:
+
+     : result_url = https://hohnlab.org/mrva/values/face-alignment-face-alignment-ctsj-a930b5f031-10d49c933cf269e4.zip
+
+   - This service is *expected to exist* in any MRVA deployment, but its concrete
+     implementation is explicitly replaceable.
+
+   - The API is intentionally minimal and stable; see =mrvahepc= for details:
+   - =mrvahepc=
+     Endpoint for CodeQL database metadata and, optionally, database content.
+
+     The container included with MRVA is provided *only as a reference
+     implementation*.  In production deployments, this service is expected to be
+     external to MRVA and independently operated.
+
+     Responsibilities:
+     - serve CodeQL database metadata within the MRVA network
+     - optionally serve CodeQL database content
+       (the reference implementation delegates bulk data transfer to an external
+       HTTPS server)
+     - provide a replaceable, API-stable boundary between MRVA and stored values
 
      Reference implementation:
      - https://github.com/hohn/mrvahepc/tree/master
@@ -274,22 +315,18 @@
     semantics between build and run. All artifacts (scratch, images, binaries) are
     host-bound and must not be shared across architectures.
 
-  Steps
+  The following are the individual build steps; they are also in [[../scripts/orchestrate-build.sh][orchestrate-build]].
   1. [[../scripts/prepare-scratch.sh][prepare-scratch.sh]]
   2. [[../scripts/build-mrvaplatform.sh][build-mrvaplatform.sh]]
-     - image name mrva-platform:0.4.7
   3. [[../scripts/build-gh-mrva.sh][build-gh-mrva.sh]]
   4. [[../scripts/build-mrvaserver.sh][build-mrvaserver.sh]]
   5. [[../scripts/build-mrvaagent.sh][build-mrvaagent.sh]]
   6. [[../scripts/build-mrvahepc.sh][build-mrvahepc.sh]]
   7. [[../scripts/build-image-mrvahepc.sh][build-image-mrvahepc]]
   8. [[../scripts/build-image-gh-mrva.sh][build-image-gh-mrva]]
-  9. build-image-mrvaagent.sh
-  10. build-image-mrvaagent.sh
-  11. build-image-mrvahepc.sh
-  12. build-image-mrvaserver.sh
-
-      
+  10. [[../scripts/build-image-mrvaagent.sh][build-image-mrvaagent]]
+  11. [[../scripts/build-image-mrvahepc.sh][build-image-mrvahepc]]
+  12. [[../scripts/build-image-mrvaserver.sh][build-image-mrvaserver]]
 
   All scripts:
   - are self-locating
