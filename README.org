@@ -12,5 +12,5 @@
 
 * Usage
   - Building from source: [[file:docs/mrva-deployment.org::*MRVA Build Order][MRVA Build Order]]
-
+  - Running pre-built containers: [[file:docs/mrva-deployment.org::*Running MRVA from binaries][Running MRVA from binaries]]
   

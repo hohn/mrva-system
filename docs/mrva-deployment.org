@@ -306,3 +306,21 @@
   - may be re-run once prerequisites exist
      
   
+* Running MRVA from binaries
+  Running pre-built containers is done via
+  #+BEGIN_SRC sh 
+    cd /your/prefix
+    git clone --recursive https://github.com/hohn/mrva-system
+    cd /your/prefix/mrva-system
+
+    export MRVA_VALUES_PATH=/your/prefix/mrva-system/submodules/mrvahepc/db-collection.global
+
+    docker compose -f submodules/mrva-docker/docker-compose-images.yml up
+  #+END_SRC
+
+  If you cloned without recursive:
+  #+BEGIN_SRC sh 
+    cd mrva-system
+    git submodule update --init --recursive
+  #+END_SRC
+
