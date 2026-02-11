@@ -28,6 +28,11 @@ fi
 
 mkdir -p "$OUT" "$STATE/logs/$COMP"
 
+# XX: image can be
+#   mrva-platform:"$MRVA_VERSION"
+# or
+#   $REG/mrva-platform:"$MRVA_VERSION" \
+
 docker run --rm \
   -v "$SRC:$WORKROOT/mrvaagent:ro" \
   -v "$MRVA_SYSTEM_ROOT/submodules/mrvacommander:$WORKROOT/mrvacommander:ro" \

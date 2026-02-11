@@ -307,20 +307,166 @@
      
   
 * Running MRVA from binaries
-  Running pre-built containers is done via
-  #+BEGIN_SRC sh 
-    cd /your/prefix
-    git clone --recursive https://github.com/hohn/mrva-system
-    cd /your/prefix/mrva-system
+  The assumptions here:
+  1. All work happens in a VM as user =worker=
+  2. You have root access
+  3. Your ghcr username is =hohn=.  Adjust this for your actual name.
 
-    export MRVA_VALUES_PATH=/your/prefix/mrva-system/submodules/mrvahepc/db-collection.global
+** Starting pre-built containers
+   Running pre-built containers is done via
+   #+BEGIN_SRC sh 
+     # Choose your prefix -- may need root
+     mkdir -p /m/mrva
+     cd /m/mrva
 
-    docker compose -f submodules/mrva-docker/docker-compose-images.yml up
-  #+END_SRC
+     # Clone repositories
+     git clone --recursive -b mh-initial-setup https://github.com/hohn/mrva-system
+     cd mrva-system
+     git submodule update --init --recursive
 
-  If you cloned without recursive:
-  #+BEGIN_SRC sh 
-    cd mrva-system
-    git submodule update --init --recursive
-  #+END_SRC
+     # Log Docker in to GHCR -- substitute your user name
+     echo $GHCR_GITHUB_TOKEN | docker login ghcr.io -u hohn --password-stdin
 
+     # Bug, to be fixed: client-ghmrva cannot start if mrva-server is not ready.  Avoid
+     # this by starting in two phases 
+     cd /m/mrva/mrva-system
+
+     export MRVA_VALUES_PATH=/m/mrva/mrva-system/submodules/mrvahepc/db-collection.global
+
+     # 
+     # start these separately, in order.
+     #
+     # mrva core
+     docker-compose -f submodules/mrva-docker/docker-compose-images.yml up -d \
+                    rabbitmq \
+                    postgres \
+                    mrvastore \
+                    hepc \
+                    server \
+                    agent
+
+     #
+     # start migrating from compose:
+     # - add explicit bucket init
+
+     # Wait until MinIO answers on the API port
+     echo "Waiting for MinIO API..."
+     until docker exec mrvastore curl -sf http://localhost:9000/minio/health/ready >/dev/null; do
+         sleep 1
+     done
+
+     echo "MinIO is up"
+
+     # Configure mc alias inside the container
+     docker exec mrvastore sh -c '
+         set -e
+         mc alias set local http://localhost:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"
+     '
+
+     # Create bucket if missing (idempotent)
+     docker exec mrvastore sh -c '
+         set -e
+         mc mb -p local/mrvabucket || true
+     '
+
+     # new window if needed
+     ssh -X -p 2221 -i ~/.ssh/id_ed25519_gitea worker@tc13.local
+
+     #
+     # - start mrva client
+     docker-compose -f submodules/mrva-docker/docker-compose-images.yml up -d \
+                    client-ghmrva
+
+     # follow logs
+     docker-compose -f submodules/mrva-docker/docker-compose-images.yml logs -f
+   #+END_SRC
+
+   If you cloned without recursive:
+   #+BEGIN_SRC sh 
+     cd mrva-system
+     git submodule update --init --recursive
+   #+END_SRC
+
+** Send analysis request
+
+   - the show-state script provides values for the UI
+      #+BEGIN_SRC sh 
+        cd /m/mrva/mrva-system/
+        ./scripts/show-state.py
+      #+END_SRC
+
+   - e.g.
+     #+BEGIN_SRC text
+       KNOWN MRVA STATE
+       ----------------
+       GH_MRVA_DIR              = /m/mrva/mrva-system/submodules/gh-mrva
+       exists                   = yes
+
+       HEPC_DIR                 = /m/mrva/mrva-system/submodules/mrvahepc
+       exists                   = yes
+
+       METADATA_DB              = /m/mrva/mrva-system/submodules/mrvahepc/db-collection.global/metadata.sql
+       exists                   = yes
+
+       SELECTION_JSON           = /m/mrva/mrva-system/submodules/gh-mrva/gh-mrva-selection.json
+       exists                   = yes
+     #+END_SRC
+     
+   - set up Tk UI.  Note: this requires X11 forwarding and will be replaced with a
+     browser / http UI.
+      #+BEGIN_SRC sh 
+        # On a debian linux VM, directly use the system binaries.  Not uv.
+        sudo apt install xauth          # X11 forwarding
+        sudo apt install -y xauth
+        sudo nano /etc/ssh/sshd_config
+        # ensure
+        # X11Forwarding yes
+        # X11UseLocalhost yes
+        sudo systemctl restart ssh
+
+        sudo apt install -y \
+             python3 \
+             python3-venv \
+             python3-tk \
+             python3-plumbum \
+             python3-pip
+
+        cd /m/mrva/mrva-system/submodules/mrvahepc
+        python3 -m venv .venv
+        source .venv/bin/activate
+        pip install --upgrade pip
+        pip install --no-cache-dir -r requirements.txt
+        pip install .
+      #+END_SRC
+
+   - send requests via UI. Note: this requires X11 forwarding and will be replaced
+     with a browser / http UI. 
+     - option: populate paths from environment or manually
+       #+BEGIN_SRC sh 
+         #
+         ssh -Y <your-vm>
+         # 
+         cd /m/mrva/mrva-system/submodules/mrvahepc
+         source .venv/bin/activate
+         python3 ./bin/host-workflow-ui
+       #+END_SRC
+     - option: populate paths from setup
+       #+BEGIN_SRC sh 
+         #
+         ssh -Y <your-vm>
+         # 
+         cd /m/mrva/mrva-system/submodules/mrvahepc
+         source .venv/bin/activate
+         (cd /m/mrva/mrva-system && ./scripts/show-state.py) |
+             python3 ./bin/host-workflow-ui --auto-populate 
+       #+END_SRC
+
+   - in the DB selector
+     - narrow:
+       + project name filter: oo
+       + primary language: cpp
+     - click export gh-mrva format
+
+   - in 'browse queries', select fprintf.ql
+
+     
