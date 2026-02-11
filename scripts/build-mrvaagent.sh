@@ -33,14 +33,17 @@ mkdir -p "$OUT" "$STATE/logs/$COMP"
 # or
 #   $REG/mrva-platform:"$MRVA_VERSION" \
 
-docker run --rm \
-  -v "$SRC:$WORKROOT/mrvaagent:ro" \
-  -v "$MRVA_SYSTEM_ROOT/submodules/mrvacommander:$WORKROOT/mrvacommander:ro" \
-  -v "$OUT:$WORKROOT/out" \
-  mrva-platform:"$MRVA_VERSION" \
-  sh -c "
-    cd $WORKROOT/mrvaagent &&
-    go build -o $WORKROOT/out/mrvaagent
-  " >"$LOG" 2>&1
+# docker run --rm \
+#   -v "$SRC:$WORKROOT/mrvaagent:ro" \
+#   -v "$MRVA_SYSTEM_ROOT/submodules/mrvacommander:$WORKROOT/mrvacommander:ro" \
+#   -v "$OUT:$WORKROOT/out" \
+#   mrva-platform:"$MRVA_VERSION" \
+#   sh -c "
+#     cd $WORKROOT/mrvaagent &&
+#     go build -o $WORKROOT/out/mrvaagent
+#   " >"$LOG" 2>&1
+
+cd $SRC && go build -o $OUT
+
 
 touch "$STATE/verified/$COMP.ok"

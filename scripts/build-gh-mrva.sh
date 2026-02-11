@@ -28,14 +28,16 @@ fi
 
 mkdir -p "$OUT" "$STATE/logs/$COMP"
 
-docker run --rm \
-  -v "$SRC:$WORKROOT/gh-mrva:ro" \
-  -v "$MRVA_SYSTEM_ROOT/submodules/mrvacommander:$WORKROOT/mrvacommander:ro" \
-  -v "$OUT:$WORKROOT/out" \
-  mrva-platform:"$MRVA_VERSION" \
-  sh -c "
-    cd $WORKROOT/gh-mrva &&
-    go build -o $WORKROOT/out/gh-mrva
-  " >"$LOG" 2>&1
+# docker run --rm \
+#   -v "$SRC:$WORKROOT/gh-mrva:ro" \
+#   -v "$MRVA_SYSTEM_ROOT/submodules/mrvacommander:$WORKROOT/mrvacommander:ro" \
+#   -v "$OUT:$WORKROOT/out" \
+#   mrva-platform:"$MRVA_VERSION" \
+#   sh -c "
+#     cd $WORKROOT/gh-mrva &&
+#     go build -o $WORKROOT/out/gh-mrva
+#   " >"$LOG" 2>&1
+
+cd $SRC && go build -o $OUT
 
 touch "$STATE/verified/$COMP.ok"
