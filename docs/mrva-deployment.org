@@ -312,90 +312,193 @@
   2. You have root access
   3. Your ghcr username is =hohn=.  Adjust this for your actual name.
 
-** Starting pre-built containers
-   Running pre-built containers is done via
-   #+BEGIN_SRC sh 
-     # Choose your prefix -- may need root
-     mkdir -p /m/mrva
-     cd /m/mrva
+** MRVA Deployment (Shell-Based Runtime, No Compose)
+   This document describes the current, compose-free runtime using the
+   explicit shell orchestration scripts on branch:
 
-     # Clone repositories
-     git clone --recursive -b mh-initial-setup https://github.com/hohn/mrva-system
-     cd mrva-system
-     git submodule update --init --recursive
+   : finish-0.4.8-images
 
-     # Log Docker in to GHCR -- substitute your user name
-     echo $GHCR_GITHUB_TOKEN | docker login ghcr.io -u hohn --password-stdin
+   All startup, readiness, bucket initialization, and wiring is handled by
+   the scripts. They will either work or fail loudly.
 
-     # Bug, to be fixed: client-ghmrva cannot start if mrva-server is not ready.  Avoid
-     # this by starting in two phases 
-     cd /m/mrva/mrva-system
+ 
 
-     export MRVA_VALUES_PATH=/m/mrva/mrva-system/submodules/mrvahepc/db-collection.global
+   For concreteness, we assume an installation prefix of:
 
-     # 
-     # start these separately, in order.
-     #
-     # mrva core
-     docker-compose -f submodules/mrva-docker/docker-compose-images.yml up -d \
-                    rabbitmq \
-                    postgres \
-                    mrvastore \
-                    hepc \
-                    server \
-                    agent
+   : /m/mrva
 
-     #
-     # start migrating from compose:
-     # - add explicit bucket init
+   All commands below use that prefix.
 
-     # Wait until MinIO answers on the API port
-     echo "Waiting for MinIO API..."
-     until docker exec mrvastore curl -sf http://localhost:9000/minio/health/ready >/dev/null; do
-         sleep 1
-     done
+   If you use a different path, a simple global search/replace is sufficient.
+   This is intentional: paths are plain strings and span languages consistently.
+   No variable indirection is required.
 
-     echo "MinIO is up"
 
-     # Configure mc alias inside the container
-     docker exec mrvastore sh -c '
-         set -e
-         mc alias set local http://localhost:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"
-     '
+*** Prerequisites / Setup
 
-     # Create bucket if missing (idempotent)
-     docker exec mrvastore sh -c '
-         set -e
-         mc mb -p local/mrvabucket || true
-     '
+**** System Requirements
 
-     # new window if needed
-     ssh -X -p 2221 -i ~/.ssh/id_ed25519_gitea worker@tc13.local
+     - Docker installed and working
+     - User is in the docker group (no sudo required for docker)
+     - Git installed
+     - SSH access with X11 forwarding (for Tk UI)
 
-     #
-     # - start mrva client
-     docker-compose -f submodules/mrva-docker/docker-compose-images.yml up -d \
-                    client-ghmrva
+     Verify docker:
 
-     # follow logs
-     docker-compose -f submodules/mrva-docker/docker-compose-images.yml logs -f
-   #+END_SRC
+     #+BEGIN_SRC sh
+       docker info
+     #+END_SRC
 
-   If you cloned without recursive:
-   #+BEGIN_SRC sh 
-     cd mrva-system
-     git submodule update --init --recursive
-   #+END_SRC
+     If pulling from GHCR fails due to authentication, log in:
 
-** Send analysis request
+     #+BEGIN_SRC sh
+       echo $GHCR_GITHUB_TOKEN | docker login ghcr.io -u <your-user> --password-stdin
+     #+END_SRC
 
-   - the show-state script provides values for the UI
-      #+BEGIN_SRC sh 
-        cd /m/mrva/mrva-system/
-        ./scripts/show-state.py
-      #+END_SRC
+     These are  public images; login may not be required.
 
-   - e.g.
+**** Clone Repository
+     #+BEGIN_SRC sh
+       mkdir -p /m/mrva
+       cd /m/mrva
+
+       git clone --recursive https://github.com/hohn/mrva-system
+       cd mrva-system
+       git checkout finish-0.4.8-images
+       git submodule update --init --recursive
+     #+END_SRC
+
+
+**** HEPC UI Requirements (X11 + Python)
+
+     On Debian/Ubuntu VM:
+
+     #+BEGIN_SRC sh
+       sudo apt update
+       sudo apt install -y \
+            xauth \
+            python3 \
+            python3-venv \
+            python3-tk \
+            python3-plumbum \
+            python3-pip
+     #+END_SRC
+
+     Ensure SSH server allows X11 forwarding:
+
+     Edit /etc/ssh/sshd_config and ensure:
+
+     #+BEGIN_SRC text
+       X11Forwarding yes
+       X11UseLocalhost yes
+     #+END_SRC
+
+     Restart SSH:
+
+     #+BEGIN_SRC sh
+       sudo systemctl restart ssh
+     #+END_SRC
+
+     Set up HEPC virtual environment:
+
+     #+BEGIN_SRC sh
+       cd /m/mrva/mrva-system/submodules/mrvahepc
+       python3 -m venv .venv
+       source .venv/bin/activate
+       pip install --upgrade pip
+       pip install --no-cache-dir -r requirements.txt
+       pip install .
+     #+END_SRC
+
+
+*** Start MRVA Core Runtime
+
+    The runtime scripts replace docker-compose completely.
+
+    They perform:
+
+    - Docker network creation (backend)
+    - Volume creation (pgdata, rabbitmq-data)
+    - Readiness checks (Postgres, RabbitMQ, MinIO)
+    - MinIO bucket initialization
+    - Explicit environment wiring
+
+    They fail loudly if something is incorrect.
+
+
+**** Required Environment
+
+     MRVA requires a values directory containing metadata.sql:
+
+     #+BEGIN_SRC sh
+       export MRVA_VALUES_PATH=/m/mrva/mrva-system/submodules/mrvahepc/db-collection.global
+     #+END_SRC
+
+**** Start All Core Containers
+
+     #+BEGIN_SRC sh
+       cd /m/mrva/mrva-system
+       ./scripts/start-containers.sh --source=ghcr
+     #+END_SRC
+
+     Notes:
+
+     - Uses images from GHCR.
+     - Fails if containers already exist.
+     - Fails if images are missing.
+     - Fails on readiness timeout.
+     - No manual MinIO bucket setup required.
+
+     If containers already exist:
+
+     #+BEGIN_SRC sh
+       ./scripts/stop-containers.sh
+     #+END_SRC
+
+     To recreate volumes (destructive to DB state):
+
+     #+BEGIN_SRC sh
+       ./scripts/start-containers.sh --source=ghcr --recreate-volumes
+     #+END_SRC
+
+
+**** Follow Logs (Compose-style Replacement)
+
+     #+BEGIN_SRC sh
+       ./scripts/log-containers.sh
+     #+END_SRC
+
+*** Start gh-mrva Client
+
+    The client must be started after the server is running.
+
+    #+BEGIN_SRC sh
+      cd /m/mrva/mrva-system/scripts
+      ./start-ghmrva.sh --source=ghcr
+    #+END_SRC
+
+    Notes:
+
+    - Requires mrva-server container running.
+    - Connects internally to http://mrva-server:8080
+    - No namespace sharing.
+    - No compose dependency.
+
+
+*** Send Analysis Request
+
+    Runtime must already be running.
+
+
+**** Show Current MRVA State
+
+     #+BEGIN_SRC sh
+       cd /m/mrva/mrva-system
+       ./scripts/show-state.py
+     #+END_SRC
+
+     Example output:
+
      #+BEGIN_SRC text
        KNOWN MRVA STATE
        ----------------
@@ -411,62 +514,86 @@
        SELECTION_JSON           = /m/mrva/mrva-system/submodules/gh-mrva/gh-mrva-selection.json
        exists                   = yes
      #+END_SRC
-     
-   - set up Tk UI.  Note: this requires X11 forwarding and will be replaced with a
-     browser / http UI.
-      #+BEGIN_SRC sh 
-        # On a debian linux VM, directly use the system binaries.  Not uv.
-        sudo apt install xauth          # X11 forwarding
-        sudo apt install -y xauth
-        sudo nano /etc/ssh/sshd_config
-        # ensure
-        # X11Forwarding yes
-        # X11UseLocalhost yes
-        sudo systemctl restart ssh
 
-        sudo apt install -y \
-             python3 \
-             python3-venv \
-             python3-tk \
-             python3-plumbum \
-             python3-pip
 
-        cd /m/mrva/mrva-system/submodules/mrvahepc
-        python3 -m venv .venv
-        source .venv/bin/activate
-        pip install --upgrade pip
-        pip install --no-cache-dir -r requirements.txt
-        pip install .
-      #+END_SRC
+**** Launch Tk Workflow UI (Auto-Populate from Runtime State)
 
-   - send requests via UI. Note: this requires X11 forwarding and will be replaced
-     with a browser / http UI. 
-     - option: populate paths from environment or manually
-       #+BEGIN_SRC sh 
-         #
-         ssh -Y <your-vm>
-         # 
-         cd /m/mrva/mrva-system/submodules/mrvahepc
-         source .venv/bin/activate
-         python3 ./bin/host-workflow-ui
-       #+END_SRC
-     - option: populate paths from setup
-       #+BEGIN_SRC sh 
-         #
-         ssh -Y <your-vm>
-         # 
-         cd /m/mrva/mrva-system/submodules/mrvahepc
-         source .venv/bin/activate
-         (cd /m/mrva/mrva-system && ./scripts/show-state.py) |
-             python3 ./bin/host-workflow-ui --auto-populate 
-       #+END_SRC
+The MRVA runtime must already be running.
 
-   - in the DB selector
-     - narrow:
-       + project name filter: oo
-       + primary language: cpp
-     - click export gh-mrva format
+Launch the UI from the host (not inside a container):
 
-   - in 'browse queries', select fprintf.ql
+#+BEGIN_SRC sh
+ssh -Y <your-vm>
 
-     
+cd /m/mrva/mrva-system/submodules/mrvahepc
+source .venv/bin/activate
+
+(cd /m/mrva/mrva-system && ./scripts/show-state.py) \
+    | python3 ./bin/host-workflow-ui --auto-populate
+#+END_SRC
+
+The UI reads runtime state via =show-state.py= and pre-fills paths.
+
+**** Workflow Steps (UI)
+
+This UI is transitional and will be replaced by a browser-based workflow.
+
+
+Follow the steps in order:
+
+1. *Check Tool*  
+   - Just click.  
+   - Confirms required binaries and paths are valid.
+
+2. *Setup Config*  
+   - Just click.  
+   - Writes gh-mrva configuration inside the container.
+
+3. *Launch DB Selector*  
+   - Click to open selector window.
+   - Narrow results:
+     - Project name filter: =oo=
+     - Primary language: =cpp=
+   - Click *Export GH-MRVA Format*.
+   - This writes the selection JSON to the host.
+
+4. *Browse Queries*  
+   - Select =Fprintf.ql= (or another query).
+   - Confirm selection.
+
+5. *Submit Jobs*  
+   - Click *Submit*.  
+   - Watch container logs in a separate terminal:
+     #+BEGIN_SRC sh
+       ./scripts/log-containers.sh
+     #+END_SRC
+
+6. *Check Status*  
+   - Click *Status* every ~10 seconds.
+   - Wait until:
+     - Successful scans > 0
+     - Status no longer progressing
+     - No failures reported
+     - When status updates become boring (i.e., totals stop changing), the run is
+       stable. 
+       
+7. *Download Results*  
+   - Click *Download*.  
+   - Results are downloaded into the =mrva-ghmrva= container.
+   - Databases (if selected) are stored in the specified output directory.
+
+After download completes, artifacts and databases are available inside
+the gh-mrva container.
+
+*** Stop Runtime
+
+    #+BEGIN_SRC sh
+      cd /m/mrva/mrva-system
+      ./scripts/stop-containers.sh
+    #+END_SRC
+
+    Notes:
+
+    - Stops and removes all MRVA containers.
+    - Volumes remain unless --recreate-volumes is used on next start.
+
