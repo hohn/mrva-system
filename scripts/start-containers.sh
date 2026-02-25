@@ -129,7 +129,20 @@ check_docker() {
 }
 
 check_image() {
-    docker image inspect "$1" >/dev/null
+    local img="$1"
+
+    if docker image inspect "$img" >/dev/null 2>&1; then
+        return 0
+    fi
+
+    if [ "$SOURCE" = "ghcr" ]; then
+        echo "Pulling image: $img"
+        docker pull "$img"
+    else
+        echo "Missing local image: $img"
+        echo "Run build first."
+        exit 1
+    fi
 }
 
 wait_for() {
