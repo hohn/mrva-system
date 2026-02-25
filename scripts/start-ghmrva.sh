@@ -77,10 +77,16 @@ else
     IMAGE="ghcr.io/hohn/mrva-gh-mrva:$VERSION"
 fi
 
-if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
-    echo "Image not found: $IMAGE"
+if [ "$SOURCE" = "ghcr" ]; then
+    echo "Pulling image: $IMAGE"
+    docker pull "$IMAGE"
+else
+    echo "Missing local image: $IMAGE"
+    echo "Run build first."
     exit 1
 fi
+
+
 
 # ============================================================
 # Run Client
