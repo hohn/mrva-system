@@ -25,7 +25,7 @@ Environment:
 
 Failure policy:
   - Fails if containers already exist.
-  - Fails if images missing.
+  - Fails if images missing (use download-containers.sh for ghcr images).
   - Fails on readiness timeout.
 EOF
 }
@@ -135,14 +135,13 @@ check_image() {
         return 0
     fi
 
+    echo "Missing image: $img"
     if [ "$SOURCE" = "ghcr" ]; then
-        echo "Pulling image: $img"
-        docker pull "$img"
+        echo "Run download-containers.sh first."
     else
-        echo "Missing local image: $img"
         echo "Run build first."
-        exit 1
     fi
+    exit 1
 }
 
 wait_for() {

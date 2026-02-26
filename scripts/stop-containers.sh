@@ -12,6 +12,7 @@ Options:
   -h, --help   Show this help and exit.
 
 Stops and removes:
+  mrva-ghmrva
   mrva-agent
   mrva-server
   mrva-hepc
@@ -29,6 +30,7 @@ if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
 fi
 
 CONTAINERS=(
+  mrva-ghmrva
   mrva-agent
   mrva-server
   mrva-hepc

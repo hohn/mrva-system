@@ -77,12 +77,13 @@ else
     IMAGE="ghcr.io/hohn/mrva-gh-mrva:$VERSION"
 fi
 
-if [ "$SOURCE" = "ghcr" ]; then
-    echo "Pulling image: $IMAGE"
-    docker pull "$IMAGE"
-else
-    echo "Missing local image: $IMAGE"
-    echo "Run build first."
+if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
+    echo "Missing image: $IMAGE"
+    if [ "$SOURCE" = "ghcr" ]; then
+        echo "Run download-containers.sh first."
+    else
+        echo "Run build first."
+    fi
     exit 1
 fi
 
@@ -101,9 +102,12 @@ echo "Running gh-mrva client using image: $IMAGE"
 echo "Connecting to server at http://mrva-server:8080"
 echo
 
-docker run -it $RM_FLAG \
+docker run -d $RM_FLAG \
     --name mrva-ghmrva \
     --network backend \
     -e SERVER_URL="http://mrva-server:8080" \
     -e MRVA_SERVER_URL="http://mrva-server:8080" \
     "$IMAGE"
+
+echo "Container mrva-ghmrva started in background."
+echo "To follow logs: docker logs -f mrva-ghmrva"

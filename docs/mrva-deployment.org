@@ -436,16 +436,25 @@
 
 **** Start All Core Containers
 
+     Download and start all core containers via
      #+BEGIN_SRC sh
        cd /m/mrva/mrva-system
+
+       ./scripts/download-containers.sh --registry=ghcr.io/hohn --version=0.4.8
+
        ./scripts/start-containers.sh --source=ghcr
      #+END_SRC
 
      Notes:
 
      - Uses images from GHCR.
-     - Fails if containers already exist.
-     - Fails if images are missing.
+     - Fails if containers already exist.  In this case, the error will specify
+       what container to delete.  To remove them all, use
+       #+BEGIN_SRC sh 
+         cd /m/mrva/mrva-system
+         ./scripts/stop-containers.sh 
+       #+END_SRC
+
      - Fails on readiness timeout.
      - No manual MinIO bucket setup required.
 
@@ -461,7 +470,6 @@
        ./scripts/start-containers.sh --source=ghcr --recreate-volumes
      #+END_SRC
 
-
 **** Follow Logs (Compose-style Replacement)
 
      #+BEGIN_SRC sh
@@ -473,8 +481,8 @@
     The client must be started after the server is running.
 
     #+BEGIN_SRC sh
-      cd /m/mrva/mrva-system/scripts
-      ./start-ghmrva.sh --source=ghcr
+      cd /m/mrva/mrva-system/
+      ./scripts/start-ghmrva.sh --source=ghcr
     #+END_SRC
 
     Notes:
