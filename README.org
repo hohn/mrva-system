@@ -1,11 +1,16 @@
-MRVA System Blueprint
+* MRVA System Blueprint
 
-This repository defines the MRVA system:
-- component composition
-- interfaces
-- procedures
+  This repository defines the MRVA system:
+  - component composition
+  - interfaces
+  - procedures
 
-It contains no deployment state.
+  It contains no deployment state.
 
-mrva-system is the blueprint.
-mrva-deploy is the scratch paper.
+  mrva-system is the blueprint.
+  mrva-deploy is the scratch paper.
+
+* Usage
+  - Building from source: [[file:docs/mrva-deployment.org::*MRVA Build Order][MRVA Build Order]]
+  - Running pre-built containers: [[file:docs/mrva-deployment.org::*Running MRVA from binaries][Running MRVA from binaries]]
+  

@@ -1,18 +1,18 @@
 [submodule "submodules/gh-mrva"]
 	path = submodules/gh-mrva
-	url = git@github.com:hohn/gh-mrva.git
+	url = ../gh-mrva.git
 [submodule "submodules/mrvaagent"]
 	path = submodules/mrvaagent
-	url = git@github.com:hohn/mrvaagent.git
+	url = ../mrvaagent.git
 [submodule "submodules/mrvacommander"]
 	path = submodules/mrvacommander
-	url = git@github.com:hohn/mrvacommander.git
+	url = ../mrvacommander.git
 [submodule "submodules/mrvaserver"]
 	path = submodules/mrvaserver
-	url = git@github.com:hohn/mrvaserver.git
+	url = ../mrvaserver.git
 [submodule "submodules/mrvahepc"]
 	path = submodules/mrvahepc
-	url = git@github.com:hohn/mrvahepc.git
+	url = ../mrvahepc.git
 [submodule "submodules/mrva-docker"]
 	path = submodules/mrva-docker
-	url = git@github.com:hohn/mrva-docker.git
+	url = ../mrva-docker.git

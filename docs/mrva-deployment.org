@@ -1,0 +1,607 @@
+#+LATEX_COMPILER: lualatex
+
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \usepackage{newunicodechar}
+
+#+LATEX_HEADER: \usepackage{newunicodechar}
+
+#+LATEX_HEADER: \newunicodechar{₁}{\ensuremath{_1}}
+#+LATEX_HEADER: \newunicodechar{₂}{\ensuremath{_2}}
+#+LATEX_HEADER: \newunicodechar{₃}{\ensuremath{_3}}
+#+LATEX_HEADER: \newunicodechar{₄}{\ensuremath{_4}}
+#+LATEX_HEADER: \newunicodechar{₅}{\ensuremath{_5}}
+#+LATEX_HEADER: \newunicodechar{₆}{\ensuremath{_6}}
+#+LATEX_HEADER: \newunicodechar{₇}{\ensuremath{_7}}
+#+LATEX_HEADER: \newunicodechar{₈}{\ensuremath{_8}}
+#+LATEX_HEADER: \newunicodechar{₉}{\ensuremath{_9}}
+#+LATEX_HEADER: \newunicodechar{₀}{\ensuremath{_0}}
+
+#+LATEX_HEADER: \newunicodechar{ₐ}{\ensuremath{_a}}
+#+LATEX_HEADER: \newunicodechar{ₑ}{\ensuremath{_e}}
+#+LATEX_HEADER: \newunicodechar{ₒ}{\ensuremath{_o}}
+#+LATEX_HEADER: \newunicodechar{ₓ}{\ensuremath{_x}}
+#+LATEX_HEADER: \newunicodechar{ₙ}{\ensuremath{_n}}
+#+LATEX_HEADER: \newunicodechar{ₖ}{\ensuremath{_k}}
+#+LATEX_HEADER: \newunicodechar{ₘ}{\ensuremath{_m}}
+#+LATEX_HEADER: \newunicodechar{≡}{\ensuremath{\equiv}}
+#+LATEX_HEADER: \newunicodechar{…}{\ensuremath{\ldots}}
+
+#+LATEX_HEADER: \newunicodechar{≈}{\ensuremath{\mathrel{\approx}}}
+#+LATEX_HEADER: \newunicodechar{↓}{\ensuremath{\mathrel{\downarrow}}}
+#+LATEX_HEADER: \newunicodechar{✅}{\textcolor{green!50!black}{\ensuremath{\checkmark}}}
+#+LATEX_HEADER: \newunicodechar{❌}{\textcolor{red!70!black}{\ensuremath{\times}}}
+#+LATEX_HEADER: \newunicodechar{∣}{\ensuremath{\mid}}
+#+LATEX_HEADER: \newunicodechar{∈}{\ensuremath{\in}}
+#+LATEX_HEADER: \newunicodechar{→}{\ensuremath{\to}}
+#+LATEX_HEADER: \newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+#+LATEX_HEADER: \newunicodechar{↦}{\ensuremath{\mapsto}}
+#+LATEX_HEADER: \newunicodechar{≥}{\ensuremath{\ge}}
+#+LATEX_HEADER: \newunicodechar{≤}{\ensuremath{\le}}
+#+LATEX_HEADER: \newunicodechar{≡}{\ensuremath{\equiv}}
+#+LATEX_HEADER: \newunicodechar{⊂}{\ensuremath{\subset}}
+#+LATEX_HEADER: \newunicodechar{⊃}{\ensuremath{\supset}}
+#+LATEX_HEADER: \newunicodechar{⊆}{\ensuremath{\subseteq}}
+#+LATEX_HEADER: \newunicodechar{⊇}{\ensuremath{\supseteq}}
+#+LATEX_HEADER: \newunicodechar{⟶}{\ensuremath{\longrightarrow}}
+#+LATEX_HEADER: \newunicodechar{⟵}{\ensuremath{\longleftarrow}}
+#+LATEX_HEADER: \newunicodechar{⋯}{\ensuremath{\cdots}}
+#+LATEX_HEADER: \newunicodechar{…}{\ensuremath{\ldots}}
+#+LATEX_HEADER: \newunicodechar{∪}{\ensuremath{\cup}}
+#+LATEX_HEADER: \newunicodechar{∩}{\ensuremath{\cap}}
+#+LATEX_HEADER: \newunicodechar{∧}{\ensuremath{\wedge}}
+#+LATEX_HEADER: \newunicodechar{∨}{\ensuremath{\vee}}
+#+LATEX_HEADER: \newunicodechar{¬}{\ensuremath{\neg}}
+#+LATEX_HEADER: \newunicodechar{∀}{\ensuremath{\forall}}
+#+LATEX_HEADER: \newunicodechar{∃}{\ensuremath{\exists}}
+#+LATEX_HEADER: \newunicodechar{⊢}{\ensuremath{\vdash}}
+#+LATEX_HEADER: \newunicodechar{⊨}{\ensuremath{\vDash}}
+#+LATEX_HEADER: \newunicodechar{⊥}{\ensuremath{\bot}}
+#+LATEX_HEADER: \newunicodechar{⊤}{\ensuremath{\top}}
+#+LATEX_HEADER: \newunicodechar{∅}{\ensuremath{\emptyset}}
+#+LATEX_HEADER: \newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+#+LATEX_HEADER: \newunicodechar{⇔}{\ensuremath{\Leftrightarrow}}
+
+#+LATEX_HEADER: \usepackage[
+#+LATEX_HEADER:   paper=letterpaper,
+#+LATEX_HEADER:   left=1in,
+#+LATEX_HEADER:   right=1in,
+#+LATEX_HEADER:   top=1in,
+#+LATEX_HEADER:   bottom=1in
+#+LATEX_HEADER: ]{geometry}
+
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \setmainfont{Avenir Next}[
+#+LATEX_HEADER:   UprightFont = *,
+#+LATEX_HEADER:   ItalicFont = * Italic,
+#+LATEX_HEADER:   BoldFont = * Demi Bold,
+#+LATEX_HEADER:   BoldItalicFont = * Demi Bold Italic
+#+LATEX_HEADER: ]
+
+# #+LATEX_HEADER: \usepackage{fontspec}
+# #+LATEX_HEADER: \setmainfont{CMU Bright}
+# #+LATEX_HEADER: \setsansfont{CMU Bright}
+# #+LATEX_HEADER: \setmonofont{CMU Typewriter Text}
+
+#+HTML_HEAD: <style>
+#+HTML_HEAD: body {
+#+HTML_HEAD:   font-family: "Avenir Next", "Avenir", "Average Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+#+HTML_HEAD:   font-weight: 400;
+#+HTML_HEAD:   line-height: 1.5;
+#+HTML_HEAD: }
+#+HTML_HEAD: code, pre, tt {
+#+HTML_HEAD:   font-family: "CMU Typewriter Text", "CMU Typewriter", "Courier New", monospace;
+#+HTML_HEAD:   font-size: 0.95em;
+#+HTML_HEAD:   background-color: #f8f8f8;
+#+HTML_HEAD:   border-radius: 4px;
+#+HTML_HEAD:   padding: 0.1em 0.25em;
+#+HTML_HEAD: }
+#+HTML_HEAD: pre {
+#+HTML_HEAD:   padding: 0.6em;
+#+HTML_HEAD:   border: 1px solid #ddd;
+#+HTML_HEAD:   background-color: #fdfdfd;
+#+HTML_HEAD:   overflow-x: auto;
+#+HTML_HEAD: }
+#+HTML_HEAD: </style>
+
+# #+OPTIONS: author:nil date:nil html-validation-link:nil
+# #+OPTIONS: creator:nil
+# #+OPTIONS: html-postamble:nil
+#+OPTIONS: H:2 num:t \n:nil @:t ::t |:t ^:{} f:t *:t TeX:t LaTeX:t skip:nil p:nil
+
+* MRVA deployment documentation
+** Introduction
+  This document describes the /deployment-level/ structure of MRVA.  The goal is to
+  explain /what/ is deployed and /how the pieces relate/, without descending into
+  developer-level or implementation details.
+
+  We therefore stay strictly at the /container level/.  The internal structure of
+  each container is fully specified by its =Dockerfile=; those details are treated
+  as authoritative and are not duplicated here.  The complete, reproducible
+  assembly process—starting from source—is described in the
+  [[*MRVA Build Order][MRVA Build Order]] section.
+
+  The canonical list of containers used in a reference deployment is defined in
+
+  - [[../submodules/mrva-docker/docker-compose-demo.yml]]
+
+  with corresponding Dockerfiles located in
+
+  - [[../submodules/mrva-docker/containers/]]
+
+  Only containers that are part of the MRVA system itself are discussed in this
+  document; stock infrastructure containers are treated as external services.
+
+** Container groups
+
+   For clarity, containers are grouped by responsibility:
+
+   1. *Internal containers*: MRVA proper
+   2. *Stock containers*: off-the-shelf services used by MRVA
+   3. *Externally provided services*: required services that are expected to be
+      supplied by the deployment environment (a reference implementation is
+      provided for convenience)
+
+   This grouping reflects responsibility boundaries rather than implementation
+   details.
+
+** Internal containers: MRVA proper
+
+   The following repositories are submodules of this repository
+   ([[../submodules/]]) and together constitute MRVA itself:
+
+   - =gh-mrva=
+   - =mrvaserver=
+   - =mrvaagent=
+   - =mrvacommander=
+   - =mrvahepc= (reference implementation only; see below)
+
+   Their roles are as follows:
+
+   - =gh-mrva=
+     A user-driven, shell-oriented frontend providing three operations:
+     1. submit analysis requests
+     2. query request status
+     3. download results (and optionally CodeQL databases)
+
+   - =mrvaserver=
+     The externally facing service.  It receives requests from =gh-mrva= and
+     orchestrates their execution by coordinating the internal services.
+
+   - =mrvaagent=
+     The internal job runner.  It performs the actual analyses:
+     - consumes jobs
+     - retrieves database metadata (and possibly databases) via =mrvahepc=
+     - runs =codeql database analyze=
+     - returns results via RabbitMQ
+
+   - =mrvacommander=
+     Shared library code used by both =mrvaserver= and =mrvaagent=.  It contains no
+     standalone service logic.
+
+   - =mrva-docker=
+     The container-assembly repository that defines how all MRVA containers are
+     built and composed:
+     https://github.com/hohn/mrva-docker
+
+** Stock containers (infrastructure services)
+
+   These are unmodified, publicly available containers that provide standard
+   infrastructure services within the MRVA deployment:
+
+   - =postgres=
+   - =rabbitmq=
+   - =minio=
+
+   They are treated as replaceable components, provided they satisfy the expected
+   interfaces.
+
+** Externally provided services
+
+   MRVA depends on a small number of services that are *logically required* but are
+   expected to be supplied externally in real deployments.  Reference
+   implementations are provided solely to make the system self-contained and
+   immediately usable.
+
+   - *NOTE*: The default =hepc= configuration references
+     https://hohnlab.org/mrva/values/ for access to approximately 70–90 GB of
+     open-source CodeQL databases.  For example:
+
+     : result_url = https://hohnlab.org/mrva/values/face-alignment-face-alignment-ctsj-a930b5f031-10d49c933cf269e4.zip
+
+   - This service is *expected to exist* in any MRVA deployment, but its concrete
+     implementation is explicitly replaceable.
+
+   - The API is intentionally minimal and stable; see =mrvahepc= for details:
+   - =mrvahepc=
+     Endpoint for CodeQL database metadata and, optionally, database content.
+
+     The container included with MRVA is provided *only as a reference
+     implementation*.  In production deployments, this service is expected to be
+     external to MRVA and independently operated.
+
+     Responsibilities:
+     - serve CodeQL database metadata within the MRVA network
+     - optionally serve CodeQL database content
+       (the reference implementation delegates bulk data transfer to an external
+       HTTPS server)
+     - provide a replaceable, API-stable boundary between MRVA and stored values
+
+     Reference implementation:
+     - https://github.com/hohn/mrvahepc/tree/master
+
+*** Fixed API contract of =mrvahepc=
+
+    The =mrvahepc= service exposes a *fixed API* that MRVA relies on.
+
+    - Metadata endpoint:
+      - returns a JSON array
+      - schema definition:
+        https://github.com/hohn/mrvahepc/blob/master/bin/mc-hepc-init#L65
+      - example payload:
+
+        #+begin_src javascript
+          [
+              {
+                  "git_branch": "HEAD",
+                  "git_commit_id": "dc0c7f3de40530053189c572936ae4fd1567269b",
+                  "git_repo": "bulk-builder",
+                  "ingestion_datetime_utc": "2022-11-30T00:44:34.455172576Z",
+                  "result_url": "http://hepc/db/db-collection.tmp/bulk-builder-bulk-builder-ctsj-a8e72a.zip",
+                  "tool_id": "9f2f9642-febb-4435-9204-fb50bbd43de4",
+                  "tool_name": "codeql-cpp",
+                  "tool_version": "2.11.3",
+                  "projname": "bulk-builder/bulk-builder"
+              }
+          ]
+        #+end_src
+
+    - Content serving:
+      - actual database content is referenced via the metadata
+      - the metadata field name is fixed:
+        - ="result_url"=
+      - the URL itself is arbitrary and deployment-specific, e.g.:
+
+        ="http://hepc/db/db-collection.tmp/bulk-builder-bulk-builder-ctsj-a8e72a.zip"=
+
+    As long as this API contract is respected, =mrvahepc= can be freely replaced.
+
+** Container assembly
+
+   The assembly and composition of all containers is driven by the
+   =mrva-docker= repository.  This deployment document intentionally stops at the
+   container boundary; build mechanics and developer-level concerns are covered
+   elsewhere.
+
+* MRVA Build Order
+  - This document defines execution order.
+  - Scripts define state; this document defines sequence.
+  - Use a single platform -- amd64 or arm64 -- for all steps to avoid
+    cross-platform incompatibilities from Docker.  Docker build and run treat
+    =--platform= differently; we don't use it here.
+  - MRVA executes natively on a single host architecture per deployment.
+    Cross-architecture builds and runtime emulation are intentionally
+    unsupported.  Docker’s --platform flag is not used, as it introduces divergent
+    semantics between build and run. All artifacts (scratch, images, binaries) are
+    host-bound and must not be shared across architectures.
+
+  The following are the individual build steps; they are also in [[../scripts/orchestrate-build.sh][orchestrate-build]].
+  1. [[../scripts/prepare-scratch.sh][prepare-scratch.sh]]
+  2. [[../scripts/build-mrvaplatform.sh][build-mrvaplatform.sh]]
+  3. [[../scripts/build-gh-mrva.sh][build-gh-mrva.sh]]
+  4. [[../scripts/build-mrvaserver.sh][build-mrvaserver.sh]]
+  5. [[../scripts/build-mrvaagent.sh][build-mrvaagent.sh]]
+  6. [[../scripts/build-mrvahepc.sh][build-mrvahepc.sh]]
+  7. [[../scripts/build-image-mrvahepc.sh][build-image-mrvahepc]]
+  8. [[../scripts/build-image-gh-mrva.sh][build-image-gh-mrva]]
+  10. [[../scripts/build-image-mrvaagent.sh][build-image-mrvaagent]]
+  11. [[../scripts/build-image-mrvahepc.sh][build-image-mrvahepc]]
+  12. [[../scripts/build-image-mrvaserver.sh][build-image-mrvaserver]]
+
+  All scripts:
+  - are self-locating
+  - write only into deploy-scratch/state
+  - emit logs and verification markers
+  - may be re-run once prerequisites exist
+     
+  
+* Running MRVA from binaries
+  The assumptions here:
+  1. All work happens in a VM as user =worker=
+  2. You have root access
+  3. Your ghcr username is =hohn=.  Adjust this for your actual name.
+
+** MRVA Deployment (Shell-Based Runtime, No Compose)
+   This document describes the current, compose-free runtime using the
+   explicit shell orchestration scripts on branch:
+
+   : finish-0.4.8-images
+
+   All startup, readiness, bucket initialization, and wiring is handled by
+   the scripts. They will either work or fail loudly.
+
+ 
+
+   For concreteness, we assume an installation prefix of:
+
+   : /m/mrva
+
+   All commands below use that prefix.
+
+   If you use a different path, a simple global search/replace is sufficient.
+   This is intentional: paths are plain strings and span languages consistently.
+   No variable indirection is required.
+
+
+*** Prerequisites / Setup
+
+**** System Requirements
+
+     - Docker installed and working
+     - User is in the docker group (no sudo required for docker)
+     - Git installed
+     - SSH access with X11 forwarding (for Tk UI)
+
+     Verify docker:
+
+     #+BEGIN_SRC sh
+       docker info
+     #+END_SRC
+
+     If pulling from GHCR fails due to authentication, log in:
+
+     #+BEGIN_SRC sh
+       echo $GHCR_GITHUB_TOKEN | docker login ghcr.io -u <your-user> --password-stdin
+     #+END_SRC
+
+     These are  public images; login may not be required.
+
+**** Clone Repository
+     #+BEGIN_SRC sh
+       mkdir -p /m/mrva
+       cd /m/mrva
+
+       git clone --recursive https://github.com/hohn/mrva-system
+       cd mrva-system
+       git checkout finish-0.4.8-images
+       git submodule update --init --recursive
+     #+END_SRC
+
+
+**** HEPC UI Requirements (X11 + Python)
+
+     On Debian/Ubuntu VM:
+
+     #+BEGIN_SRC sh
+       sudo apt update
+       sudo apt install -y \
+            xauth \
+            python3 \
+            python3-venv \
+            python3-tk \
+            python3-plumbum \
+            python3-pip
+     #+END_SRC
+
+     Ensure SSH server allows X11 forwarding:
+
+     Edit /etc/ssh/sshd_config and ensure:
+
+     #+BEGIN_SRC text
+       X11Forwarding yes
+       X11UseLocalhost yes
+     #+END_SRC
+
+     Restart SSH:
+
+     #+BEGIN_SRC sh
+       sudo systemctl restart ssh
+     #+END_SRC
+
+     Set up HEPC virtual environment:
+
+     #+BEGIN_SRC sh
+       cd /m/mrva/mrva-system/submodules/mrvahepc
+       python3 -m venv .venv
+       source .venv/bin/activate
+       pip install --upgrade pip
+       pip install --no-cache-dir -r requirements.txt
+       pip install .
+     #+END_SRC
+
+
+*** Start MRVA Core Runtime
+
+    The runtime scripts replace docker-compose completely.
+
+    They perform:
+
+    - Docker network creation (backend)
+    - Volume creation (pgdata, rabbitmq-data)
+    - Readiness checks (Postgres, RabbitMQ, MinIO)
+    - MinIO bucket initialization
+    - Explicit environment wiring
+
+    They fail loudly if something is incorrect.
+
+
+**** Required Environment
+
+     MRVA requires a values directory containing metadata.sql:
+
+     #+BEGIN_SRC sh
+       export MRVA_VALUES_PATH=/m/mrva/mrva-system/submodules/mrvahepc/db-collection.global
+     #+END_SRC
+
+**** Start All Core Containers
+
+     Download and start all core containers via
+     #+BEGIN_SRC sh
+       cd /m/mrva/mrva-system
+
+       ./scripts/download-containers.sh --registry=ghcr.io/hohn --version=0.4.8
+
+       ./scripts/start-containers.sh --source=ghcr
+     #+END_SRC
+
+     Notes:
+
+     - Uses images from GHCR.
+     - Fails if containers already exist.  In this case, the error will specify
+       what container to delete.  To remove them all, use
+       #+BEGIN_SRC sh 
+         cd /m/mrva/mrva-system
+         ./scripts/stop-containers.sh 
+       #+END_SRC
+
+     - Fails on readiness timeout.
+     - No manual MinIO bucket setup required.
+
+     If containers already exist:
+
+     #+BEGIN_SRC sh
+       ./scripts/stop-containers.sh
+     #+END_SRC
+
+     To recreate volumes (destructive to DB state):
+
+     #+BEGIN_SRC sh
+       ./scripts/start-containers.sh --source=ghcr --recreate-volumes
+     #+END_SRC
+
+**** Follow Logs (Compose-style Replacement)
+
+     #+BEGIN_SRC sh
+       ./scripts/log-containers.sh
+     #+END_SRC
+
+*** Start gh-mrva Client
+
+    The client must be started after the server is running.
+
+    #+BEGIN_SRC sh
+      cd /m/mrva/mrva-system/
+      ./scripts/start-ghmrva.sh --source=ghcr
+    #+END_SRC
+
+    Notes:
+
+    - Requires mrva-server container running.
+    - Connects internally to http://mrva-server:8080
+    - No namespace sharing.
+    - No compose dependency.
+
+
+*** Send Analysis Request
+
+    Runtime must already be running.
+
+
+**** Show Current MRVA State
+
+     #+BEGIN_SRC sh
+       cd /m/mrva/mrva-system
+       ./scripts/show-state.py
+     #+END_SRC
+
+     Example output:
+
+     #+BEGIN_SRC text
+       KNOWN MRVA STATE
+       ----------------
+       GH_MRVA_DIR              = /m/mrva/mrva-system/submodules/gh-mrva
+       exists                   = yes
+
+       HEPC_DIR                 = /m/mrva/mrva-system/submodules/mrvahepc
+       exists                   = yes
+
+       METADATA_DB              = /m/mrva/mrva-system/submodules/mrvahepc/db-collection.global/metadata.sql
+       exists                   = yes
+
+       SELECTION_JSON           = /m/mrva/mrva-system/submodules/gh-mrva/gh-mrva-selection.json
+       exists                   = yes
+     #+END_SRC
+
+
+**** Launch Tk Workflow UI (Auto-Populate from Runtime State)
+
+The MRVA runtime must already be running.
+
+Launch the UI from the host (not inside a container):
+
+#+BEGIN_SRC sh
+ssh -Y <your-vm>
+
+cd /m/mrva/mrva-system/submodules/mrvahepc
+source .venv/bin/activate
+
+(cd /m/mrva/mrva-system && ./scripts/show-state.py) \
+    | python3 ./bin/host-workflow-ui --auto-populate
+#+END_SRC
+
+The UI reads runtime state via =show-state.py= and pre-fills paths.
+
+**** Workflow Steps (UI)
+
+This UI is transitional and will be replaced by a browser-based workflow.
+
+
+Follow the steps in order:
+
+1. *Check Tool*  
+   - Just click.  
+   - Confirms required binaries and paths are valid.
+
+2. *Setup Config*  
+   - Just click.  
+   - Writes gh-mrva configuration inside the container.
+
+3. *Launch DB Selector*  
+   - Click to open selector window.
+   - Narrow results:
+     - Project name filter: =oo=
+     - Primary language: =cpp=
+   - Click *Export GH-MRVA Format*.
+   - This writes the selection JSON to the host.
+
+4. *Browse Queries*  
+   - Select =Fprintf.ql= (or another query).
+   - Confirm selection.
+
+5. *Submit Jobs*  
+   - Click *Submit*.  
+   - Watch container logs in a separate terminal:
+     #+BEGIN_SRC sh
+       ./scripts/log-containers.sh
+     #+END_SRC
+
+6. *Check Status*  
+   - Click *Status* every ~10 seconds.
+   - Wait until:
+     - Successful scans > 0
+     - Status no longer progressing
+     - No failures reported
+     - When status updates become boring (i.e., totals stop changing), the run is
+       stable. 
+       
+7. *Download Results*  
+   - Click *Download*.  
+   - Results are downloaded into the =mrva-ghmrva= container.
+   - Databases (if selected) are stored in the specified output directory.
+
+After download completes, artifacts and databases are available inside
+the gh-mrva container.
+
+*** Stop Runtime
+
+    #+BEGIN_SRC sh
+      cd /m/mrva/mrva-system
+      ./scripts/stop-containers.sh
+    #+END_SRC
+
+    Notes:
+
+    - Stops and removes all MRVA containers.
+    - Volumes remain unless --recreate-volumes is used on next start.
+
