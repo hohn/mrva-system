@@ -3,7 +3,7 @@ set -euo pipefail
 . "$(dirname "$0")/lib.sh"
 
 COMP=mrvahepc
-IMG=mrva-hepc-container
+IMG=mrva-hepc
 SRC="$STATE/generated/$COMP"
 CTX="$SRC/context"
 LOG="$STATE/logs/$COMP/image.log"

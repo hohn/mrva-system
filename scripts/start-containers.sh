@@ -241,7 +241,15 @@ docker run -d \
     "$IMG_MINIO" \
     server /data --console-address ":9001"
 
-wait_for "minio" "docker exec mrvastore curl -sf http://localhost:9000/minio/health/ready"
+# Wait for minio readiness; the local build has mrva-platform with curl,
+# otherwise just use a simple sleep since mrvastore lacks curl.
+if [ "$SOURCE" = "local" ]; then
+    wait_for "minio" "docker run --rm --network backend mrva-platform:$MRVA_VERSION curl -sf http://mrvastore:9000/minio/health/ready"
+else
+    echo "Waiting for minio to start..."
+    sleep 5
+fi
+
 
 echo "Initializing bucket"
 docker run --rm \
@@ -270,6 +278,7 @@ echo "Starting server"
 docker run -d \
     --name mrva-server \
     --network backend \
+    --network-alias server \
     -p 127.0.0.1:18080:8080 \
     -e ARTIFACT_MINIO_ENDPOINT="$ARTIFACT_MINIO_ENDPOINT" \
     -e ARTIFACT_MINIO_ID="$ARTIFACT_MINIO_ID" \
